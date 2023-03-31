@@ -1,11 +1,24 @@
 # CrowdMeta
 
-## 数据集
+If you use CrowdMeta, please cite the following paper:
 
-### 1. MiniImageNet数据集
-MiniImageNet数据集节选自ImageNet数据集。ImageNet是一个非常有名的大型视觉数据集，它的建立旨在促进视觉识别研究。训练ImageNet数据集需要消耗大量的计算资源。ImageNet为超过1400万张图像进行了注释，而且给至少100万张图像提供了边框。ImageNet包含2万多个类别，每个类别均有不少于500张图像。
+```
+@article{zhang2023crowdmeta,
+	title={CrowdMeta: Crowdsourcing Truth Inference with Meta-Knowledge Transfer},
+	author={Zhang, Jing and Xu, Sunyue and Sheng, Victor S},
+	journal={Pattern Recognition},
+	pages={109525},
+	year={2023},
+	publisher={Elsevier}
+}
+```
 
-训练这么多图像需要消耗大量的资源，因此在2016年google DeepMind团队Oriol Vinyals等人在ImageNet的基础上提取出了MiniImageNet数据集。如果您在工作中使用MiniImageNet数据集，请引用以下论文。
+## Datasets
+
+### 1. Dataset MiniImageNet
+The MiniImageNet dataset was derived from the ImageNet dataset. ImageNet is a well-known large-scale visual dataset, which was established to facilitate CV research. Training the ImageNet dataset consumes a lot of computing resources. ImageNet annotates over 14 million images and provides bounding boxes for at least 1 million images. ImageNet contains more than 20,000 categories and each category has no less than 500 images.
+
+Training so many images consumes a lot of resources, so in 2016, Oriol Vinyals et al. in Google DeepMind team extracted the MiniImageNet dataset based on ImageNet. If you use the MiniImageNet dataset in your work, please cite the following paper:
 
 ```
 @inproceedings{Vinyals2016,
@@ -18,7 +31,7 @@ MiniImageNet数据集节选自ImageNet数据集。ImageNet是一个非常有名�
 }
 ```
 
-MiniImagenet一共有2.86GB，文件架构如下：
+MiniImagenet is sized 2.86GB. File structure is as follows：
 
  root/ &nbsp;  
  &emsp;  |- images/  
@@ -29,10 +42,10 @@ MiniImagenet一共有2.86GB，文件架构如下：
  &emsp; |- test.csv  
  &emsp; |- val.csv  
 
-数据集可从[github](https://github.com/yaoyao-liu/mini-imagenet-tools)仓库下载。
+The MiniImagenet dataset can be downloaded from [github:mini-imagenet](https://github.com/yaoyao-liu/mini-imagenet-tools).
 
-### 2. Omniglot数据集
-Omniglot Dataset翻译过来就是全语言文字数据集，包含各种语言的不同字母表，如日语的平假名，日语的片假名，韩语的元音和辅音，最常见的拉丁字母等。Omniglot Dataset共包含50个不同语言的字母表，每个字母表中包含不同的字符，共1623种字符，每个字符有20个不同的人书写。也就是说Omniglot Dataset数据集包含1623个类，每个类有20个训练数据。如果您在工作中使用Omniglot数据集，请引用以下论文。
+### 2. Dataset Omniglot
+The Omniglot data is a full-language text dataset that contains different alphabets of various languages, such as Japanese hiragana, Japanese katakana, Korean vowels and consonants, the most common Latin alphabet, etc. Omniglot contains a total of 50 alphabets in different languages, each alphabet contains different characters, a total of 1623 characters, and each character is written by 20 different people. The Omniglot dataset contains 1623 classes and each class has 20 training data. If you use the Omniglot dataset in your work, please cite the following paper:
 ```
 @article{Omniglot,
 	author = {Brenden M. Lake  and Ruslan Salakhutdinov  and Joshua B. Tenenbaum },
@@ -45,36 +58,37 @@ Omniglot Dataset翻译过来就是全语言文字数据集，包含各种语言�
 	doi = {10.1126/science.aab3050},
 }
 ```
-可以从Omniglot数据集[github](https://github.com/brendenlake/omniglot)仓库下载。下载仓库后分别提供了python和matlab的api，下载并解压python目录文件下的`images_background.zip`和`images_evaluation.zip`，其为数据集划分的训练数据和测试数据。
+The Omniglot dataset can be loaded from [github:omniglot](https://github.com/brendenlake/omniglot). The download warehouse provides APIs for python and matlab respectively. Download and unzip `images_background.zip` and `images_evaluation.zip` in the python directory, which are the training data and test data.
 
-## 运行
-目录下代码功能为：
+## Run
+The functions of source code:
 
-learner.py  网络搭建  
-meta.py  网络训练  
-MiniImagenet.py  miniimagenet  数据加载  
-miniimagenet_train.py  训练与finetunin  
-omniglot.py  omniglot  数据加载  
-omniglot_train.py  训练与finetuning  
-meanstd.py  特征分布提取  
-infer.py  真值推断  
+learner.py  network building  
+meta.py  network training  
+MiniImagenet.py  miniimagenet  data loaded  
+miniimagenet_train.py  training and fine-tuning  
+omniglot.py  omniglot  data loaded  
+omniglot_train.py  training and fine-tuning  
+meanstd.py  feature distribution extraction  
+infer.py  truth inference  
 
-注：因miniimagenet数据集与omniglot数据结构略有不同，所以其数据加载略有不同，如若要使用其他数据集，建议将数据文件结构预处理为miniimagenet数据集相同结构。训练与finetuning文件`miniimagenet_train.py`与`omniglot_train.py`本质上没有区别，只在调用数据加载上有所差异。
-### 1. 预训练模型+finetuning
-运行miniimagenet_train.py文件，获得高阶特征表示。
+Note: Because the structure of the Miniimagenet dataset is slightly different from that of the Omniglot dataset, the data loading is slightly different. If you want to use other datasets, it is recommended to preprocess the data file structure to the same structure as the Miniimagenet dataset. There is essentially no difference between the training and finetuning files `miniimagenet_train.py` and `omniglot_train.py`, except for the data loading.
+
+### 1. pre-training+finetuning
+run `miniimagenet_train.py` and obtain high-order feature representations.
 ```bash
 #python method.py
 python miniimagenet_train.py
 ```
-### 2. 特征分布提取
-运行meanstd.py文件，提取目标任务的特征分布。目标任务dataset.txt存放任务图片的地址。
+### 2. feature distribution extraction
+run `meanstd.py` to extract the feature distribution of the target task. The target task dataset.txt stores the address of the task image.
 ```bash
-#python method.py <目标任务地址> <特征分布地址>
+#python method.py <file of target tasks> <file of feature distributions>
 python meanstd.py dataset.txt distribution.txt
 ```
-### 3. 真值推断
-运行infer.py文件，得到最终的集成标签文件以及准确率。
+### 3. truth inference
+run `infer.py` to obtain a file storing the final integrated labels and accuracy.
 ```bash
-#python method.py <.resp地址> <.gold地址> <高阶特征地址> <特征分布地址>
+#python method.py <.resp file> <.gold file> <file of high-order features> <file of feature distributions>
 python infer.py label.resp truth.gold feature.attr distribution.txt
 ```
