@@ -1,0 +1,283 @@
+\begin{thebibliography}{29}
+\expandafter\ifx\csname natexlab\endcsname\relax\def\natexlab#1{#1}\fi
+\providecommand{\url}[1]{\texttt{#1}}
+\providecommand{\href}[2]{#2}
+\providecommand{\path}[1]{#1}
+\providecommand{\DOIprefix}{doi:}
+\providecommand{\ArXivprefix}{arXiv:}
+\providecommand{\URLprefix}{URL: }
+\providecommand{\Pubmedprefix}{pmid:}
+\providecommand{\doi}[1]{\href{http://dx.doi.org/#1}{\path{#1}}}
+\providecommand{\Pubmed}[1]{\href{pmid:#1}{\path{#1}}}
+\providecommand{\bibinfo}[2]{#2}
+\ifx\xfnm\relax \def\xfnm[#1]{\unskip,\space#1}\fi
+%Type = Article
+\bibitem[{Amgad et~al.(2022)Amgad, Atteya, Hussein, Mohammed, Hafiz, Elsebaie,
+  Alhusseiny, AlMoslemany, Elmatboly, Pappalardo et~al.}]{amgad2022nucls}
+\bibinfo{author}{Amgad, M.}, \bibinfo{author}{Atteya, L.~A.},
+  \bibinfo{author}{Hussein, H.}, \bibinfo{author}{Mohammed, K.~H.},
+  \bibinfo{author}{Hafiz, E.}, \bibinfo{author}{Elsebaie, M.~A.},
+  \bibinfo{author}{Alhusseiny, A.~M.}, \bibinfo{author}{AlMoslemany, M.~A.},
+  \bibinfo{author}{Elmatboly, A.~M.}, \bibinfo{author}{Pappalardo, P.~A.}
+  et~al. (\bibinfo{year}{2022}).
+\newblock \bibinfo{title}{Nucls: A scalable crowdsourcing approach and dataset
+  for nucleus classification and segmentation in breast cancer}.
+\newblock {\it \bibinfo{journal}{GigaScience}\/},  {\it
+  \bibinfo{volume}{11}\/}.
+%Type = Inproceedings
+\bibitem[{Ciftler et~al.(2020)Ciftler, Albaseer, Lasla \&
+  Abdallah}]{ciftler2020federated}
+\bibinfo{author}{Ciftler, B.~S.}, \bibinfo{author}{Albaseer, A.},
+  \bibinfo{author}{Lasla, N.}, \& \bibinfo{author}{Abdallah, M.}
+  (\bibinfo{year}{2020}).
+\newblock \bibinfo{title}{Federated learning for rss fingerprint-based
+  localization: A privacy-preserving crowdsourcing method}.
+\newblock In {\it \bibinfo{booktitle}{2020 International Wireless
+  Communications and Mobile Computing (IWCMC)}\/} (pp.
+  \bibinfo{pages}{2112--2117}).
+\newblock \bibinfo{organization}{IEEE}.
+%Type = Article
+\bibitem[{Gao et~al.(2022)Gao, Yao \& Yang}]{gao2022survey}
+\bibinfo{author}{Gao, D.}, \bibinfo{author}{Yao, X.}, \& \bibinfo{author}{Yang,
+  Q.} (\bibinfo{year}{2022}).
+\newblock \bibinfo{title}{A survey on heterogeneous federated learning}.
+\newblock {\it \bibinfo{journal}{arXiv preprint arXiv:2210.04505}\/}, .
+%Type = Article
+\bibitem[{Li et~al.(2023)Li, Shi, Kong, Du \& Lu}]{li2023incentive}
+\bibinfo{author}{Li, B.}, \bibinfo{author}{Shi, Y.}, \bibinfo{author}{Kong,
+  Q.}, \bibinfo{author}{Du, Q.}, \& \bibinfo{author}{Lu, R.}
+  (\bibinfo{year}{2023}).
+\newblock \bibinfo{title}{Incentive-based federated learning for digital twin
+  driven industrial mobile crowdsensing}.
+\newblock {\it \bibinfo{journal}{IEEE Internet of Things Journal}\/}, .
+%Type = Article
+\bibitem[{Li et~al.(2020{\natexlab{a}})Li, Fan, Tse \& Lin}]{li2020review}
+\bibinfo{author}{Li, L.}, \bibinfo{author}{Fan, Y.}, \bibinfo{author}{Tse, M.},
+  \& \bibinfo{author}{Lin, K.-Y.} (\bibinfo{year}{2020}{\natexlab{a}}).
+\newblock \bibinfo{title}{A review of applications in federated learning}.
+\newblock {\it \bibinfo{journal}{Computers \& Industrial Engineering}\/},  {\it
+  \bibinfo{volume}{149}\/}, \bibinfo{pages}{106854}.
+%Type = Article
+\bibitem[{Li \& Sethi(2017)}]{li2017review}
+\bibinfo{author}{Li, T.}, \& \bibinfo{author}{Sethi, S.~P.}
+  (\bibinfo{year}{2017}).
+\newblock \bibinfo{title}{A review of dynamic stackelberg game models}.
+\newblock {\it \bibinfo{journal}{Discrete \& Continuous Dynamical
+  Systems-B}\/},  {\it \bibinfo{volume}{22}\/}, \bibinfo{pages}{125}.
+%Type = Article
+\bibitem[{Li et~al.(2020{\natexlab{b}})Li, Liu, Hao, Wang \&
+  Xian}]{li2020crowdsfl}
+\bibinfo{author}{Li, Z.}, \bibinfo{author}{Liu, J.}, \bibinfo{author}{Hao, J.},
+  \bibinfo{author}{Wang, H.}, \& \bibinfo{author}{Xian, M.}
+  (\bibinfo{year}{2020}{\natexlab{b}}).
+\newblock \bibinfo{title}{Crowdsfl: A secure crowd computing framework based on
+  blockchain and federated learning}.
+\newblock {\it \bibinfo{journal}{Electronics}\/},  {\it \bibinfo{volume}{9}\/},
+  \bibinfo{pages}{773}.
+%Type = Article
+\bibitem[{Liu et~al.(2022)Liu, Huang, Zhou, Li, Ji, Xiong \&
+  Dou}]{liu2022distributed}
+\bibinfo{author}{Liu, J.}, \bibinfo{author}{Huang, J.}, \bibinfo{author}{Zhou,
+  Y.}, \bibinfo{author}{Li, X.}, \bibinfo{author}{Ji, S.},
+  \bibinfo{author}{Xiong, H.}, \& \bibinfo{author}{Dou, D.}
+  (\bibinfo{year}{2022}).
+\newblock \bibinfo{title}{From distributed machine learning to federated
+  learning: A survey}.
+\newblock {\it \bibinfo{journal}{Knowledge and Information Systems}\/},  {\it
+  \bibinfo{volume}{64}\/}, \bibinfo{pages}{885--917}.
+%Type = Article
+\bibitem[{Lyu et~al.(2020)Lyu, Yu, Zhao \& Yang}]{lyu2020threats}
+\bibinfo{author}{Lyu, L.}, \bibinfo{author}{Yu, H.}, \bibinfo{author}{Zhao,
+  J.}, \& \bibinfo{author}{Yang, Q.} (\bibinfo{year}{2020}).
+\newblock \bibinfo{title}{Threats to federated learning}.
+\newblock {\it \bibinfo{journal}{Federated Learning: Privacy and Incentive}\/},
+   (pp. \bibinfo{pages}{3--16}).
+%Type = Inproceedings
+\bibitem[{McMahan et~al.(2017)McMahan, Moore, Ramage, Hampson \&
+  y~Arcas}]{mcmahan2017communication}
+\bibinfo{author}{McMahan, B.}, \bibinfo{author}{Moore, E.},
+  \bibinfo{author}{Ramage, D.}, \bibinfo{author}{Hampson, S.}, \&
+  \bibinfo{author}{y~Arcas, B.~A.} (\bibinfo{year}{2017}).
+\newblock \bibinfo{title}{Communication-efficient learning of deep networks
+  from decentralized data}.
+\newblock In {\it \bibinfo{booktitle}{Artificial intelligence and
+  statistics}\/} (pp. \bibinfo{pages}{1273--1282}).
+\newblock \bibinfo{organization}{PMLR}.
+%Type = Article
+\bibitem[{Mothukuri et~al.(2021)Mothukuri, Parizi, Pouriyeh, Huang,
+  Dehghantanha \& Srivastava}]{mothukuri2021survey}
+\bibinfo{author}{Mothukuri, V.}, \bibinfo{author}{Parizi, R.~M.},
+  \bibinfo{author}{Pouriyeh, S.}, \bibinfo{author}{Huang, Y.},
+  \bibinfo{author}{Dehghantanha, A.}, \& \bibinfo{author}{Srivastava, G.}
+  (\bibinfo{year}{2021}).
+\newblock \bibinfo{title}{A survey on security and privacy of federated
+  learning}.
+\newblock {\it \bibinfo{journal}{Future Generation Computer Systems}\/},  {\it
+  \bibinfo{volume}{115}\/}, \bibinfo{pages}{619--640}.
+%Type = Inproceedings
+\bibitem[{Pournajaf et~al.(2014)Pournajaf, Xiong, Sunderam \&
+  Goryczka}]{pournajaf2014spatial}
+\bibinfo{author}{Pournajaf, L.}, \bibinfo{author}{Xiong, L.},
+  \bibinfo{author}{Sunderam, V.}, \& \bibinfo{author}{Goryczka, S.}
+  (\bibinfo{year}{2014}).
+\newblock \bibinfo{title}{Spatial task assignment for crowd sensing with
+  cloaked locations}.
+\newblock In {\it \bibinfo{booktitle}{2014 IEEE 15th International Conference
+  on Mobile Data Management}\/} (pp. \bibinfo{pages}{73--82}).
+\newblock \bibinfo{organization}{IEEE} volume~\bibinfo{volume}{1}.
+%Type = Article
+\bibitem[{Ren et~al.(2022)Ren, Li, Miao, Luo, Weng, Choo \&
+  Deng}]{ren2022towards}
+\bibinfo{author}{Ren, Y.}, \bibinfo{author}{Li, X.}, \bibinfo{author}{Miao,
+  Y.}, \bibinfo{author}{Luo, B.}, \bibinfo{author}{Weng, J.},
+  \bibinfo{author}{Choo, K.-K.~R.}, \& \bibinfo{author}{Deng, R.~H.}
+  (\bibinfo{year}{2022}).
+\newblock \bibinfo{title}{Towards privacy-preserving spatial distribution
+  crowdsensing: A game theoretic approach}.
+\newblock {\it \bibinfo{journal}{IEEE Transactions on Information Forensics and
+  Security}\/},  {\it \bibinfo{volume}{17}\/}, \bibinfo{pages}{804--818}.
+%Type = Inproceedings
+\bibitem[{Sigurdsson et~al.(2016)Sigurdsson, Varol, Wang, Farhadi, Laptev \&
+  Gupta}]{sigurdsson2016hollywood}
+\bibinfo{author}{Sigurdsson, G.~A.}, \bibinfo{author}{Varol, G.},
+  \bibinfo{author}{Wang, X.}, \bibinfo{author}{Farhadi, A.},
+  \bibinfo{author}{Laptev, I.}, \& \bibinfo{author}{Gupta, A.}
+  (\bibinfo{year}{2016}).
+\newblock \bibinfo{title}{Hollywood in homes: Crowdsourcing data collection for
+  activity understanding}.
+\newblock In {\it \bibinfo{booktitle}{Computer Vision--ECCV 2016: 14th European
+  Conference, Amsterdam, The Netherlands, October 11--14, 2016, Proceedings,
+  Part I 14}\/} (pp. \bibinfo{pages}{510--526}).
+\newblock \bibinfo{organization}{Springer}.
+%Type = Article
+\bibitem[{Suri et~al.(2022)Suri, Kanani, Marathe \& Peterson}]{suri2022subject}
+\bibinfo{author}{Suri, A.}, \bibinfo{author}{Kanani, P.},
+  \bibinfo{author}{Marathe, V.~J.}, \& \bibinfo{author}{Peterson, D.~W.}
+  (\bibinfo{year}{2022}).
+\newblock \bibinfo{title}{Subject membership inference attacks in federated
+  learning}.
+\newblock {\it \bibinfo{journal}{arXiv preprint arXiv:2206.03317}\/}, .
+%Type = Article
+\bibitem[{Tu et~al.(2020)Tu, Yu, Domeniconi, Wang, Xiao \& Guo}]{tu2020multi}
+\bibinfo{author}{Tu, J.}, \bibinfo{author}{Yu, G.},
+  \bibinfo{author}{Domeniconi, C.}, \bibinfo{author}{Wang, J.},
+  \bibinfo{author}{Xiao, G.}, \& \bibinfo{author}{Guo, M.}
+  (\bibinfo{year}{2020}).
+\newblock \bibinfo{title}{Multi-label crowd consensus via joint matrix
+  factorization}.
+\newblock {\it \bibinfo{journal}{Knowledge and Information Systems}\/},  {\it
+  \bibinfo{volume}{62}\/}, \bibinfo{pages}{1341--1369}.
+%Type = Inproceedings
+\bibitem[{Wang et~al.(2018)Wang, Qin, Yang, Han \& Ma}]{wang2018geographic}
+\bibinfo{author}{Wang, L.}, \bibinfo{author}{Qin, G.}, \bibinfo{author}{Yang,
+  D.}, \bibinfo{author}{Han, X.}, \& \bibinfo{author}{Ma, X.}
+  (\bibinfo{year}{2018}).
+\newblock \bibinfo{title}{Geographic differential privacy for mobile crowd
+  coverage maximization}.
+\newblock In {\it \bibinfo{booktitle}{Proceedings of the AAAI Conference on
+  Artificial Intelligence}\/}.
+\newblock volume~\bibinfo{volume}{32}.
+%Type = Article
+\bibitem[{Wang et~al.(2020{\natexlab{a}})Wang, Yu \& Han}]{wang2020federated}
+\bibinfo{author}{Wang, L.}, \bibinfo{author}{Yu, H.}, \& \bibinfo{author}{Han,
+  X.} (\bibinfo{year}{2020}{\natexlab{a}}).
+\newblock \bibinfo{title}{Federated crowdsensing: framework and challenges}.
+\newblock {\it \bibinfo{journal}{arXiv preprint arXiv:2011.03208}\/}, .
+%Type = Article
+\bibitem[{Wang et~al.(2020{\natexlab{b}})Wang, Yu \& Han}]{wan2020federated}
+\bibinfo{author}{Wang, L.}, \bibinfo{author}{Yu, H.}, \& \bibinfo{author}{Han,
+  X.} (\bibinfo{year}{2020}{\natexlab{b}}).
+\newblock \bibinfo{title}{Federated crowdsensing: framework and challenges}.
+\newblock {\it \bibinfo{journal}{arXiv preprint arXiv:2011.03208}\/}, .
+%Type = Article
+\bibitem[{Wei et~al.(2019)Wei, Lin, Yao \& Zhang}]{wei2019differential}
+\bibinfo{author}{Wei, J.}, \bibinfo{author}{Lin, Y.}, \bibinfo{author}{Yao,
+  X.}, \& \bibinfo{author}{Zhang, J.} (\bibinfo{year}{2019}).
+\newblock \bibinfo{title}{Differential privacy-based location protection in
+  spatial crowdsourcing}.
+\newblock {\it \bibinfo{journal}{IEEE Transactions on Services Computing}\/},
+  {\it \bibinfo{volume}{15}\/}, \bibinfo{pages}{45--58}.
+%Type = Article
+\bibitem[{Wu et~al.(2021)Wu, Li, Bilal, Xu, Zhang \& Hou}]{wu2021multi}
+\bibinfo{author}{Wu, M.}, \bibinfo{author}{Li, Q.}, \bibinfo{author}{Bilal,
+  M.}, \bibinfo{author}{Xu, X.}, \bibinfo{author}{Zhang, J.}, \&
+  \bibinfo{author}{Hou, J.} (\bibinfo{year}{2021}).
+\newblock \bibinfo{title}{Multi-label active learning from crowds for secure
+  iiot}.
+\newblock {\it \bibinfo{journal}{Ad Hoc Networks}\/},  {\it
+  \bibinfo{volume}{121}\/}, \bibinfo{pages}{102594}.
+%Type = Article
+\bibitem[{Xia \& McKernan(2020)}]{xia2020privacy}
+\bibinfo{author}{Xia, H.}, \& \bibinfo{author}{McKernan, B.}
+  (\bibinfo{year}{2020}).
+\newblock \bibinfo{title}{Privacy in crowdsourcing: a review of the threats and
+  challenges}.
+\newblock {\it \bibinfo{journal}{Computer Supported Cooperative Work
+  (CSCW)}\/},  {\it \bibinfo{volume}{29}\/}, \bibinfo{pages}{263--301}.
+%Type = Article
+\bibitem[{Ye et~al.(2018)Ye, Coco, Epishova, Hajaj, Bogardus, Novak, Denny,
+  Vorobeychik, Lasko, Malin et~al.}]{ye2018crowdsourcing}
+\bibinfo{author}{Ye, C.}, \bibinfo{author}{Coco, J.},
+  \bibinfo{author}{Epishova, A.}, \bibinfo{author}{Hajaj, C.},
+  \bibinfo{author}{Bogardus, H.}, \bibinfo{author}{Novak, L.},
+  \bibinfo{author}{Denny, J.}, \bibinfo{author}{Vorobeychik, Y.},
+  \bibinfo{author}{Lasko, T.}, \bibinfo{author}{Malin, B.} et~al.
+  (\bibinfo{year}{2018}).
+\newblock \bibinfo{title}{A crowdsourcing framework for medical data sets}.
+\newblock {\it \bibinfo{journal}{AMIA Summits on Translational Science
+  Proceedings}\/},  {\it \bibinfo{volume}{2018}\/}, \bibinfo{pages}{273}.
+%Type = Article
+\bibitem[{Yu et~al.(2020)Yu, Tu, Wang, Domeniconi \& Zhang}]{yu2020active}
+\bibinfo{author}{Yu, G.}, \bibinfo{author}{Tu, J.}, \bibinfo{author}{Wang, J.},
+  \bibinfo{author}{Domeniconi, C.}, \& \bibinfo{author}{Zhang, X.}
+  (\bibinfo{year}{2020}).
+\newblock \bibinfo{title}{Active multilabel crowd consensus}.
+\newblock {\it \bibinfo{journal}{IEEE Transactions on Neural Networks and
+  Learning Systems}\/},  {\it \bibinfo{volume}{32}\/},
+  \bibinfo{pages}{1448--1459}.
+%Type = Article
+\bibitem[{Zhan et~al.(2021{\natexlab{a}})Zhan, Li, Guo \&
+  Qu}]{zhan2021incentive}
+\bibinfo{author}{Zhan, Y.}, \bibinfo{author}{Li, P.}, \bibinfo{author}{Guo,
+  S.}, \& \bibinfo{author}{Qu, Z.} (\bibinfo{year}{2021}{\natexlab{a}}).
+\newblock \bibinfo{title}{Incentive mechanism design for federated learning:
+  Challenges and opportunities}.
+\newblock {\it \bibinfo{journal}{IEEE Network}\/},  {\it
+  \bibinfo{volume}{35}\/}, \bibinfo{pages}{310--317}.
+%Type = Article
+\bibitem[{Zhan et~al.(2020)Zhan, Li, Qu, Zeng \& Guo}]{zhan2020learning}
+\bibinfo{author}{Zhan, Y.}, \bibinfo{author}{Li, P.}, \bibinfo{author}{Qu, Z.},
+  \bibinfo{author}{Zeng, D.}, \& \bibinfo{author}{Guo, S.}
+  (\bibinfo{year}{2020}).
+\newblock \bibinfo{title}{A learning-based incentive mechanism for federated
+  learning}.
+\newblock {\it \bibinfo{journal}{IEEE Internet of Things Journal}\/},  {\it
+  \bibinfo{volume}{7}\/}, \bibinfo{pages}{6360--6368}.
+%Type = Article
+\bibitem[{Zhan et~al.(2021{\natexlab{b}})Zhan, Zhang, Hong, Wu, Li \&
+  Guo}]{zhan2021survey}
+\bibinfo{author}{Zhan, Y.}, \bibinfo{author}{Zhang, J.}, \bibinfo{author}{Hong,
+  Z.}, \bibinfo{author}{Wu, L.}, \bibinfo{author}{Li, P.}, \&
+  \bibinfo{author}{Guo, S.} (\bibinfo{year}{2021}{\natexlab{b}}).
+\newblock \bibinfo{title}{A survey of incentive mechanism design for federated
+  learning}.
+\newblock {\it \bibinfo{journal}{IEEE Transactions on Emerging Topics in
+  Computing}\/},  {\it \bibinfo{volume}{10}\/}, \bibinfo{pages}{1035--1044}.
+%Type = Article
+\bibitem[{Zhang et~al.(2021)Zhang, Guo, Jia, Wang \& Du}]{zhang2021enabling}
+\bibinfo{author}{Zhang, C.}, \bibinfo{author}{Guo, Y.}, \bibinfo{author}{Jia,
+  X.}, \bibinfo{author}{Wang, C.}, \& \bibinfo{author}{Du, H.}
+  (\bibinfo{year}{2021}).
+\newblock \bibinfo{title}{Enabling proxy-free privacy-preserving and federated
+  crowdsourcing by using blockchain}.
+\newblock {\it \bibinfo{journal}{IEEE Internet of Things Journal}\/},  {\it
+  \bibinfo{volume}{8}\/}, \bibinfo{pages}{6624--6636}.
+%Type = Article
+\bibitem[{Zhang et~al.(2022)Zhang, Wu, Zhou \& Sheng}]{zhang2022active}
+\bibinfo{author}{Zhang, J.}, \bibinfo{author}{Wu, M.}, \bibinfo{author}{Zhou,
+  C.}, \& \bibinfo{author}{Sheng, V.~S.} (\bibinfo{year}{2022}).
+\newblock \bibinfo{title}{Active crowdsourcing for multilabel annotation}.
+\newblock {\it \bibinfo{journal}{IEEE Transactions on Neural Networks and
+  Learning Systems}\/}, .
+
+\end{thebibliography}
