@@ -1,0 +1,90 @@
+\documentclass[final,1p,times]{elsarticle}
+
+\usepackage{amssymb}
+\usepackage{amsmath,amsfonts}
+\usepackage{algorithmic}
+\usepackage{algorithm}
+\usepackage{color,array}
+\usepackage[caption=false,font=normalsize,labelfont=sf,textfont=sf]{subfig}
+\usepackage{textcomp}
+\usepackage{stfloats}
+\usepackage{url}
+\usepackage{verbatim}
+\usepackage{graphics}
+\usepackage{multirow}
+\usepackage{bm}
+\usepackage{threeparttable}
+\usepackage{booktabs}
+\usepackage{subfloat}
+
+\renewcommand{\algorithmicrequire}{\textbf{Input:}}  
+\renewcommand{\algorithmicensure}{\textbf{Output:}}
+
+%\journal{Expert Systems With Applications}
+
+\bibliographystyle{model5-names}\biboptions{authoryear}
+
+\begin{document}
+	
+\begin{frontmatter}
+		
+\title{Time-controlled incentive federated crowdsourcing}
+		
+
+\author[mymainaddress]{Jing Zhang 
+\corref{mycorrespondingauthor}}
+\ead{jingz@seu.edu.cn}
+		
+\author[secondaddress]{Xiaoqian Jiang}
+\ead{220224926@seu.edu.cn}
+		
+%\author[thirdaddress]{}
+%\ead{}
+		
+\cortext[mycorrespondingauthor]{Corresponding author}
+\address[mymainaddress]{School of Cyber Science and Engineering, Southeast University, No. 2 SEU Road, Nanjing 211189, China}
+\address[secondaddress]{School of Cyber Science and Engineering, Southeast University, No. 2 SEU Road, Nanjing 211189, China}
+%\address[thirdaddress]{}
+		
+\begin{abstract}
+			
+\end{abstract}
+\begin{keyword}
+	
+\end{keyword}
+\end{frontmatter}
+
+\section{Introduction} 
+Crowdsourcing provides a feasible way to introduce human intelligence to solve notori-ously difficult tasks that cannot be solve by computers alone (Vaughan, 2017). One of the mostwidespread applications of crowdsourcing is to collect data from massive Internet workers. Commercial crowdsourcing platforms such as MTurkAppen, etc., have provided effective interaction modes between task requesters and workers tofacilitate the execution of crowdsourced tasks. 
+It is worth noting that while crowdsourcing provides convenience, it may also expose workers'privacy such as locations, vocal prints, and face images \citep{xia2020privacy}, which will reduce workers' willingness to participate in tasks.
+ People's increasing awareness of privacy security makes privacy research in crowdsourcing more and more necessary. \cite{chen2017private} adds a random noisy value to each data message. \cite{varshney2014assuring} and \cite{jin2016inception} directly add random perturbation to sensory data. \cite{jin2016enabling} and \cite{luo2016incentive} try to support differential privacy by adding a random perturbation to the bidding information. 
+Notwithstanding, These traditional solutions to prevent privacy disclosure all come at the expense of the accuracy of crowdsourcing data. They have to undermine the quality of crowdsourcing, because the original information uploaded by the worker needs to be modified.
+
+For the above problem, the federated learning (FL) \citep{mcmahan2017communication} framework is introduced. FL allows multiple clients to collaborate on training shared models by iteratively aggregating model updates without exposing the raw data \citep{wan2020federated,gao2022survey}. In traditional crowdsourcing, the platform centrally processes the data collected by workers \citep{yu2020active,tu2020multi,wu2021multi,zhang2022active}. However, Centralized platforms are prone to privacy breaches. Fortunately, we can introduce the framework of FL to develop mobile crowdsourcing. As a distributed learning framework, FL allows crowdsourcing workers to process data locally before uploading it. Federate crowdsourcing has been approved well \citep{li2020crowdsfl,ciftler2020federated,zhang2021enabling}.
+
+FL can effectively mitigate privacy breaches in crowdsourcing, but FL requires clients to contribute their data, computing, and communications resources \citep{zhan2021incentive}. Without enough motivation, the client will not actively participate in FL. Furthermore, Although FL allows clients to process data locally, malicious third parties can recover part of a participant's data from a server's shared data update \citep{lyu2020threats,suri2022subject}. Such potential privacy concern makes even less active participants in FL \citep{mothukuri2021survey}. Unless there's enough compensation that clients are willing to take those risks and contribute their resources. Moreover, the clients in FL have absolute control over their own devices and data\citep{liu2022distributed}. In other words, only the owners of the clients can decide when, where and how to participate in FL \citep{li2020review}. Therefore, Sufficient incentive can improve the performance of the model by encouraging clients to respond optimally. To sum up, Incentive mechanism is integral to crowdsourcing and FL.
+
+Current research on incentive mechanism focuses on FL, which is designed around the driving factors of clients’ contribution, reputation, and resource allocation \citep{zhan2020learning,zhan2021survey,li2023incentive}. The problem they address is how to measure the contribution of each client and how to attract and retain more clients. However, those incentive mechanisms designed for FL do not work well in federated crowdsourcing. The reasons are as follows:(1) In federated crowdsourcing, clients need to manually label crowdsourcing tasks, so the incentive mechanism also needs to mobilize workers' interest and enthusiasm for crowdsourcing tasks. (2) Due to the heterogeneity of client devices (e.g., computing and communication resources) and individual workers (e.g., knowledge reserve and professional quality), time control should be considered in federated crowdsourcing. (3) Federated crowdsourcing is not done as quickly as possible. It needs to both assess the quality of submitted data to prevent malicious workers from submitting low-quality data for quick rewards, and respond to client delays in updating the model due to emergencies(e.g., the instability of workers, devices, and network). (4) In federal crowdsourcing, platforms need to recruit and retain high-quality workers, workers (clients) need to be paid fairly on time, and task publishers (servers) need to pay as little as possible to maximize their own benefits. The incentive mechanism of federated crowdsourcing must meet the requirements of all three parties at the same time.
+
+To meet above challenges, we put forward Time-controlled incentive federated crowdsourcing (TiFedCrowd) which inspires the client to complete data collection and local model training within the given time to optimize the global model. TiFedCrowd modeled the above issue as a two-stage Stackelberg game \citep{li2017review} with the time limit for analysis and discussion. In the second stage, TiFedCrowd allots rewards based on the local accuracy level of the client. At the same time, the costs paid by workers to complete federated crowdsourcing tasks are considered, mainly computing and communication costs thereby motivating workers to complete crowdsourcing tasks actively and efficiently. In the first stage, TiFedCrowd maximizes the net utility of the server, which is the total utility of global model minus the total incentive costs delivered to clients. Meanwhile, the maximum and minimum completion times are specified so that only models uploaded within the given time will be accepted. Finally, we deduce the Nash equilibrium in the Stackelberg game. Figure 1 shows the working flow diagram of the eFedCrowd.The main contributions of this paper are as follows:
+\begin{itemize}
+	\item We propose the Time-controlled incentive federated crowdsourcing (TiFedCrowd), which protects the privacy of participants while encouraging more workers to complete crowdsourcing tasks with high quality and efficiency. A time threshold is set to preliminarily screen the quality of submitted data, which is applicable to both immediate and non-instant crowdsourcing.
+	\item The Nash equilibrium of the stackelberg game is derived, and we prove that the server and clients utility maximization is globally optimal.
+	\item TiFedCrowd allocates rewards according to contributions, having strong interpretability, which is conducive to attracting and retaining high-quality crowdsourcing workers, thus maintaining the fairness and accountability of the federated crowdsourcing market.
+\end{itemize}
+
+%\begin{comment}
+\section{Related Work}
+The research in this paper is divided into two aspects: one is privacy protection in crowdsourcing, and the other is incentive mechanism in FL.
+
+Since crowdsourcing needs to collect data from workers, it is inevitable that there will be some crowdsourcing tasks involving workers' sensitive information, so workers involved in the crowdsourcing tasks will face the risk of privacy disclosure \citep{wu2019bptm,zhang2020decentralized}. Differential privacy \citep{dwork2006differential} has been widely favored in the research field of Internet privacy protection since it was proposed. Nevertheless, differential privacy works by injecting different levels of noise into the model, undoubtedly at the cost of model accuracy \citep{bagdasaryan2019differential}. In addition, there are also techniques to protect the privacy of crowdsourcing workers that introduce various cryptographic algorithms. For example, \cite{shu2018privacy} proposed a privacy-preserving task recommendation scheme for crowdsourcing, which exploits polynomial functions to express multiple keywords of task requirements and worker interests, and then designs a key derivation method based on matrix decomposition. \cite{joshi2020salt} used SALT cryptography in the proposed solution to ensure privacy. \cite{zhang2019privacy} proposed a privacy-preserving traffic monitoring scheme through both adopting a homomorphic Paillier cryptosystem and super-increasing sequence. However, These encryption algorithms are complex, expensive, and cannot resist inference attacks \citep{lin2020secbcs,wang2019towards}.
+
+To alleviate the above defects, FL provides a secure way to work together so that participants can share and leverage data without exposing their privacy. Mean teacher semisupervised FL \citep{zhang2021toward} trains a deep neural network ensemble under a novel semisupervised FL framework, achieving highly accurate and privacy-protected crowdsourcing. \cite{li2020crowdsf} proposed a crowdsourcing framework named CrowdSFL, which combines blockchain with FL to help users implement crowdsourcing with less overhead and higher security. \cite{zhao2021crowdsensing} proposed a privacy-preserving mobile crowdsensing (MCS) system, which integrates FL into MCS and allows participants to locally process sensing data via FL. Nevertheless, These approaches to privacy protection in crowdsourcing by introducing the FL framework are all based on the ideal condition that participants are fully willing to make any contribution.
+
+An incentive mechanism is necessary to ensure the quality and efficiency of FL. Participating in FL consumes computing resources on clients, occupies network bandwidth on clients, and even shortens the battery life of client devices. Clients are not willing to make sacrifices to participate in FL without any return. Accordingly, there is a growing body of research on the incentive mechanism of FL. \cite{zhan2020learn} designed a deep reinforcement learning-based incentive mechanism to determine the optimal pricing strategy for the parameter server and the optimal training strategies for edge nodes. \cite{le2021incentive} formulated the incentive mechanism between the base station and mobile users as an auction game and further proposed the primal-dual greedy auction mechanism to decide winners in the auction and maximize social welfare. \cite{zhang2021incentive} proposed an incentive mechanism of FL based on reputation and reverse auction theory, which selects and rewards participants by combining the reputation and bids of the participants under a limited budget. \cite{9317806} modelled each data owner's contribution and the three categories of computing, communication, and privacy costs based on a multi-dimensional contract approach. \cite{pandey2019incentivize} introduced the crowdsourcing framework into FL and developed a two-stage Starkelberg game to analyze and solve the interests maximization of the client and central server respectively. Exploiting the non-trivial dependence of the training loss on clients’ hidden efforts and private local models, \cite{zhao2023truthful} devised Labeling and Computation Effort and local Model Elicitation mechanisms which incentivize strategic clients to make truthful efforts as desired by the server in local data labeling and local model computation.
+
+Unfortunately, none of these incentive Mechanisms for FL are designed to work in a federated crowdsourcing program that needs to collect data samples manually. Moreover, they all ignore the impact of time on the effectiveness of federated crowdsourcing and fail to respond to the instability of participants and networks. The eFedCrowd proposed in this paper sets a time threshold to assign the data freshness level and task completion time to the determination of task publication. Furthermore, the contribution is measured against the accuracy of the client's local training model, and the rewards are distributed fairly in an economical manner, so as to motivate workers to complete tasks efficiently and with high quality.    	 
+%\end{comment}
+
+\bibliography{reference1.bib}
+\end{document}
