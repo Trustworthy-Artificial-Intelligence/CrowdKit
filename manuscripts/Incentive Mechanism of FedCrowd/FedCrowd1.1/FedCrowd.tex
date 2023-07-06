@@ -86,7 +86,7 @@ An incentive mechanism is necessary to ensure the quality and efficiency of FL. 
 Unfortunately, none of these incentive mechanisms works well in federated crowdsourcing that needs to collect data samples manually (i.e., so-call data crowdsourcing). Moreover, they all ignore the relationship between the time that workers collect data and the quality of submitted data in federated crowdsourcing and fail to respond to some delays in receiving data. The proposed TiFedCrowd in this study sets a time interval whose lower bound preliminarily screens the quality of submitted data and whose upper bound enables the task publisher to specify the fresh level of the data. Furthermore, the contribution of a worker is measured according to the accuracy with which the client completes a local training model within the given time, and the rewards are fairly allocated in an economical manner, so as to motivate more workers to complete crowdsourcing tasks with high quality and efficiency.
 
 \section{Methodology} \label{sec:mtd}
-In this section, we first present the federated crowdsourcing problem settings. Then, we present the proposed incentive mechanism as a two-stage Stackelberg game and also derive its equilibrium. Finally, we summarize the whole process as an algorithm.
+In this section, we first present the federated crowdsourcing problem settings. Then, we present the proposed incentive mechanism as a two-stage Stackelberg game and also derive its equilibrium. Next, we summarize the whole process as an algorithm. Finally, we prove that time control is necessary for federated crowdsourcing.
 
 \subsection{Problem Settings}
 Let $\bm{\mathcal{N}} = \{1,2,\dots,n\}$ be a group of workers participating in federated crowdsourcing. For each worker $k\in\bm{\mathcal{N}}$, let $D_k=\{\bm{x_i}^k,y_i^k\}_{i=1}^m$ be the data sample set, where $m$ is the number of tasks, $\bm{x_i}^k\in\mathbb{R}^d$ is a vector with $d$ features representing the task for annotation, and $y_i^k\in\mathbb{R}$ is the label annotated for task $\bm{x_i}^k$ by worker $k$. To achieve privacy protection, TiFedCrowd requires that $D_k$ be kept locally and not shared with the server or other clients. In addition, each client trains its own local model $\theta_k$ through $D_k$ to collaboratively train the shared model $\Theta$.
@@ -196,6 +196,29 @@ The second derivative of $u_k(r,a_k)$ with respect to $a_k$ is:
 Therefore, It is proved that $r^\ast = \frac{1}{\zeta}\cdot\sqrt{\sum_{k=1}^n(\gamma_k\cdot\mathbb{I}(\tau))}$ is the global optimal reward rate and unique. 
 
 Ultimately, we find the unique Stackelberg-equilibrium of the game.
+\subsection{Why we need the time control.}
+To ensure the quality and efficiency of crowdsourcing, TiFedCrowd limits the time for the clients to complete the federated crowdsourcing tasks by setting a time interval $[T_{\min},T_{\max}]$. The upper bound $T_{\max}$ is set by the data requester according to his/her needs, which responds to delays in receiving data due to device and network failures as well as disruptions on clients rather than waiting passively. In addition, the completion deadline $T_{\max}$ also indicates the data requester's recognition of the freshness of the data. In other words, as long as the data submitted before $T_{\max}$ is considered fresh. The lower bound $T_{\min}$ is calculated by the server based on the task difficulty level and network quality, which prevents malicious clients from submitting low-quality data for quick rewards. The ultimate goal of TiFedCrowd is to obtain a high-quality global model, based on which we demonstrate that time control is necessary for federal crowdsourcing.
+
+According to (7), the definition of the server utility model without time control is as follows: 
+\begin{equation}
+	\bar{U} = \frac{1}{n}\cdot \sum_{k=1}^n(\alpha\cdot a_k)  - \sum_{k=1}^n(r\cdot a_k)
+\end{equation}
+where $\sum_{k=1}^n(r\cdot a_k)$ is the cost totally spent for incentivizing clients to participate in federated crowdsourcing. 
+
+To compare the magnitude of $\bar{U}$ and $U$, we take the difference of $\bar{U}$ minus $U$:
+\begin{equation}
+	\bar{U} -U = \frac{1}{n}\cdot \sum_{k=1}^n(\alpha\cdot a_k)-\frac{1}{\zeta}\cdot \sum_{k=1}^n(\alpha\cdot a_k\cdot \mathbb{I}(\tau))- \beta\cdot(T_{\max}-\max_{\mathbb{I}(\tau)=1,1\le k\le n}T_k) - \sum_{k=1}^n(r\cdot a_k\cdot (1-\mathbb{I}(\tau)))
+\end{equation}
+
+For those data submitted after the deadline $T_{\max}$, whose data freshness does not meet the requirements of the data requester, we consider the accuracy level of their contribution to be $0$. Since TiFedCrowd uses the time control mechanism to screen out low-quality data, we have the following results:
+\begin{equation}
+	\begin{aligned}
+		\frac{1}{n}\cdot \sum_{k=1}^n\cdot a_k < \frac{1}{\zeta}\cdot \sum_{k=1}^n\cdot a_k\cdot \mathbb{I}(\tau)\quad
+		&\Leftrightarrow\quad \frac{1}{n}\cdot \sum_{k=1}^n(\alpha\cdot a_k)-\frac{1}{\zeta}\cdot \sum_{k=1}^n(\alpha\cdot a_k\cdot \mathbb{I}(\tau))<0\\&\Leftrightarrow\quad  \bar{U} -U<0\quad\Leftrightarrow\quad  \bar{U} < U
+	\end{aligned}
+\end{equation}	
+
+In summary, we show that the utility of the server without time control is less than the utility of one with it. consequently, time control is critical to federated crowdsourcing.
 \subsection{Algorithm}
 The pseudo-code of TiFedCrowd is shown in Algorithm~\ref{Algo1}. Lines 2-13 are the procedures at the server and lines 15-19 are for clients. Exactly, the process of the server-side includes the following 4 steps: estimate the minimum completion time (line 2), calculate the optimum response accuracy level at the given reward rate for each valid participant (lines 3-8), compute the optimum reward rate and announce it to clients, then wait until the deadline for them to complete the task (lines 10-12), receive the updated models and return the aggregated global model (lines 13).
 The process of the client includes the following 3 steps: receive
@@ -205,8 +228,8 @@ the task completion time interval and the declared reward rate from the server (
 	\caption{\underline {Ti}me-controlled incentive \underline{Fed}erated \underline{Crowd}sourcing (TiFedCrowd)}
 	\label{Algo1}
 	\begin{algorithmic}[1]
-		\REQUIRE clients $\bm{\mathcal{N}} = \{1,2,\dots,n\}$; local data samples sets ${D_k}_{k=1}^n$; computation
-		parameters ${\gamma_k}_{k=1}^n$; size of the published model $\xi$;  system parameters $\alpha$ and $\beta$; completion deadline $T_{\max}$.
+		\REQUIRE clients $\bm{\mathcal{N}} = \{1,2,\dots,n\}$; local data samples sets $\{D_k\}_{k=1}^n$; computation
+		parameters $\{\gamma_k\}_{k=1}^n$; size of the published model $\xi$;  system parameters $\alpha$ and $\beta$; completion deadline $T_{\max}$.
 		\ENSURE  global model $\Theta$.
 		\STATE Procedure at the Server:
 		\STATE Estimate the minimum completion time $T_{\min}$.
