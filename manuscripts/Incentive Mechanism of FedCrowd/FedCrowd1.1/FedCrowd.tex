@@ -91,7 +91,7 @@ In this section, we first present the federated crowdsourcing problem settings. 
 \subsection{Problem Settings}
 Let $\bm{\mathcal{N}} = \{1,2,\dots,n\}$ be a group of workers participating in federated crowdsourcing. For each worker $k\in\bm{\mathcal{N}}$, let $D_k=\{\bm{x_i}^k,y_i^k\}_{i=1}^m$ be the data sample set, where $m$ is the number of tasks, $\bm{x_i}^k\in\mathbb{R}^d$ is a vector with $d$ features representing the task for annotation, and $y_i^k\in\mathbb{R}$ is the label annotated for task $\bm{x_i}^k$ by worker $k$. To achieve privacy protection, TiFedCrowd requires that $D_k$ be kept locally and not shared with the server or other clients. In addition, each client trains its own local model $\theta_k$ through $D_k$ to collaboratively train the shared model $\Theta$.
 
-Figure~\ref{fig:framework} shows the framework of the proposed TiFedCrowd model. The data requester first publishes task requirements and the allowed maximum completion time $T_{\max}$ through a crowdsourcing platform. Then, the platform (server) calculates the allowed minimum completion time $T_{\min}$ by evaluating task difficulty level and network quality and announces it to all clients along with the to-be-trained model $\theta$ and the reward rate $r$. For any client $k$, it determines his/her training accuracy level at the reward rate $r$. Next, the client collects data on demand to train the local model for attaining accuracy $a^\ast$ and sends the updated model to the server. Only those models uploaded within the time interval $[T_{\min},T_{\max}]$ will be accepted by the server, otherwise, they will be rejected. In this process, if the completion time of a model is greater than $T_{\max}$, it indicates that the local model updating may encounter some errors (i.e., network unavailable, training corrupt, data collection failed, etc.). The server will not receive the model. If the completion time of a model is less than $T_{\min}$, it indicates that the client may not take the task seriously. The server also reject it.  Finally, the server aggregates the received local models $\{\theta_k\}_{k=1}^n,t_k\in[T_{\min},T_{\max}]$ to obtain a global model and then distributes the rewards to clients whose models are successfully accepted according to the accuracy levels that they archived.
+Figure~\ref{fig:framework} shows the framework of the proposed TiFedCrowd model. The data requester first publishes task requirements and the allowed maximum completion time $T_{\max}$ through a crowdsourcing platform. Then, the platform (server) calculates the allowed minimum completion time $T_{\min}$ by evaluating task difficulty level and network quality and announces it to all clients along with the to-be-trained model $\theta$ and the reward rate $r$. For any client $k$, it determines his/her training accuracy level at the reward rate $r$. Next, the client collects data on demand to train the local model for attaining accuracy $a^\ast$ and sends the updated model to the server. Only those models uploaded within the time interval $[T_{\min},T_{\max}]$ will be accepted by the server, otherwise, they will be rejected. In this process, if the completion time of a model is greater than $T_{\max}$, it indicates that the local model updating may encounter some errors (i.e., network unavailable, training corrupt, data collection failed, etc.). The server will not receive the model. If the completion time of a model is less than $T_{\min}$, it indicates that the client may not take the task seriously. The server also rejects it.  Finally, the server aggregates the received local models $\{\theta_k\}_{k=1}^n,T_k\in[T_{\min},T_{\max}]$ to obtain a global model and then distributes the rewards to clients whose models are successfully accepted according to the accuracy levels that they archived. As a result, TiFedCrowd realizes the aim that the server-side encourages clients to collect high-quality data to improve the performance of the global model on a smaller budget.
 \begin{figure}
 	\centering
 	\includegraphics[width=5.5in]{TiFedCrowd framework.pdf}
@@ -99,19 +99,19 @@ Figure~\ref{fig:framework} shows the framework of the proposed TiFedCrowd model.
 	\label{fig:framework}
 \end{figure}
 \subsection{Incentive Mechanism: The Two-Stage Stackelberg Game}
-In the proposed time-controlled incentive federated crowdsourcing model, the data requster reward clients who complete tasks within the specified time to achieve optimal local accuracy, thereby optimizing the global model. Simultaneously, upon receiving the rewards, rational clients will maximize their own profits respectively. We model such interaction scenario as a two-stage stackelberg game between a server (leader) and multiple clients(followers). In stage \uppercase\expandafter{\romannumeral2}, each client individually determines his/her own training accuracy with the announced reward to maximize profit. In stage \uppercase\expandafter{\romannumeral1}, the server decides on the reward rate for clients to maximize the net utility and train the high-quality global model.
+In the proposed time-controlled incentive federated crowdsourcing model, the data requester rewards clients who complete tasks within the specified time to achieve optimal local accuracy, thereby optimizing the global model. Simultaneously, upon receiving the rewards, rational clients will maximize their own profits respectively. We model such an interaction scenario as a two-stage Stackelberg game between a server (leader) and multiple clients(followers). In stage \uppercase\expandafter{\romannumeral2}, each client individually determines his/her own training accuracy with the announced reward to maximize profit. In stage \uppercase\expandafter{\romannumeral1}, the server decides on the reward rate for clients to maximize the net utility and train the high-quality global model.
 
 \textbf{Stage \uppercase\expandafter{\romannumeral2} (Clients):} In the clients stage, the server will Initially announce the uniform reward rate $r>0$ and time interval $[T_{min},T_{max}]$ for the participating clients. Rationally, for a client $k$, the reward $v_k$ is related to the accuracy level $a_k$ of the local model $\theta_k$. Intuitively, the higher the local accuracy level, the greater the revenue:
 \begin{equation}
 	v_k = r\cdot a_k\cdot \mathbb{I}(\tau)
 \end{equation}
-where $\mathbb{I}(\tau)$ is an indicator function that returns $1$ if the condition $\tau$ is true and $0$ otherwise. Only if the completion time $t_k$ meets condition $\tau: t_k\in[T_{min},T_{max}]$ will the model $\theta_k$ be received by the server and the reward $v_k$ be allocated. We refer to clients whose models are successfully accepted by the server as valid participants. Then a rational worker will try to collect data to train local model for high accuracy within the time limit for maximizing the revenue. 
+where $\mathbb{I}(\tau)$ is an indicator function that returns $1$ if the condition $\tau$ is true and $0$ otherwise. Only if the completion time $T_k$ meets condition $\tau: T_k\in[T_{\min},T_{\max}]$ will the model $\theta_k$ be received by the server and the reward $v_k$ be allocated. We refer to clients whose models are successfully accepted by the server as valid participants. Then a rational worker will try to collect data to train local model for high accuracy within the time limit for maximizing the revenue. 
 
 However, training on local data for a defined accuracy level to improve the global model inevitably incurs a cost for the clients, mainly the computation cost $c_k^{comp}$ and the communication cost $c_k^{comm}$ included:
 \begin{equation}
 	c_k^{comp} + c_k^{comm} = c_k
 \end{equation}
-where $c_k$ denotes the total cost of client $K$'s participation. The the computation cost $c_k^{comp}$ is relevant to the number of iterations for training the local model $\theta_k$ to the aim accuracy $a_k$. According to the relationship between iterations and accuracy in the local model training described in \citep{pandey2020crowdsourcing}, the computation cost of client $k$ is defined as
+where $c_k$ denotes the total cost of client $k$'s participation. The computation cost $c_k^{comp}$ is relevant to the number of iterations for training the local model $\theta_k$ to the aim accuracy $a_k$. According to the relationship between iterations and accuracy in the local model training described in \citep{pandey2020crowdsourcing}, the computation cost of client $k$ is defined as
 \begin{equation}
 	c_k^{comp} = \gamma_k\cdot \log(\frac{1}{1-a_k})
 \end{equation}
@@ -133,13 +133,13 @@ Combined with the reward (1) and cost (2) of the client, we define the client ut
 \end{equation}
 The server utility model can be defined in relation to the maximum completion time of valid participants and the final model performance achieved with average local accuracy level:
 \begin{equation}
-	U = \frac{1}{\zeta}\cdot \sum_{k=1}^n(\alpha\cdot a_k\cdot \mathbb{I}(\tau)) + \beta\cdot(T_{max}-\max_{\mathbb{I}(\tau)=1,1\le k\le n}t_k) - \sum_{k=1}^n(r\cdot a_k\cdot \mathbb{I}(\tau))
+	U = \frac{1}{\zeta}\cdot \sum_{k=1}^n(\alpha\cdot a_k\cdot \mathbb{I}(\tau)) + \beta\cdot(T_{\max}-\max_{\mathbb{I}(\tau)=1,1\le k\le n}T_k) - \sum_{k=1}^n(r\cdot a_k\cdot \mathbb{I}(\tau))
 \end{equation}
 where $\alpha > 0$ and $\beta \ge 0$ (default $\beta = 0$, and $\beta > 0$ only makes sense in instant crowdsourcing.) are system parameters, and $\sum_{k=1}^n(r\cdot a_k\cdot \mathbb{I}(\tau))$ is the cost totally spent for incentivizing clients to validly participate in federated crowdsourcing.
 \subsection{Stackelberg-equilibrium}
 In this subsection, we will find the optimal solution to maximize the utility of clients and server by deducing the Stackelberg-equilibrium. 
 
-Defintion 1. Stackelberg-equilibrium. For any values of $r$ and $\bm{a}$, $(r^\ast,\bm{a}^\ast)$ is a Stackelberg-equilibrium if  it satisfies the following conditions:
+Definition 1. Stackelberg-equilibrium. For any values of $r$ and $\bm{a}$, $(r^\ast,\bm{a}^\ast)$ is a Stackelberg-equilibrium if  it satisfies the following conditions:
 \begin{equation}
 	U(r^\ast,\bm{a}^\ast) \ge U(r,\bm{a}^\ast)
 \end{equation}	
@@ -170,9 +170,9 @@ Since $0<a_k^\ast<1$, we can derive the value range of the reward rate $r$:
 	\Leftrightarrow\quad r > \gamma_k
 \end{equation}	
 
-Based on the above derivations for clients (followers), as the leader in the game, the server can deduce the unique Stackelberg-equilibrium among valid participants for any reward rate $r>\gamma_k$. Accordingly, the server can choose the optimal reward rate $r^\ast$ to maximize its net utility. Based upon the sets of the completion time $\bm{t}^\ast$ and the optinum response accuracy $\bm{a}^\ast$, the server utility model is defined as:
+Based on the above derivations for clients (followers), as the leader in the game, the server can deduce the unique Stackelberg-equilibrium among valid participants for any reward rate $r>\gamma_k$. Accordingly, the server can choose the optimal reward rate $r^\ast$ to maximize its net utility. Based upon the sets of the completion time $\bm{T}^\ast$ and the optimum response accuracy $\bm{a}^\ast$, the server utility model is defined as:
 \begin{equation}
-	U(r,\bm{a}^\ast) = \frac{1}{\zeta}\cdot \sum_{k=1}^n(\alpha\cdot a_k^\ast\cdot \mathbb{I}(\tau)) + \beta\cdot(T_{max}-\max_{\mathbb{I}(\tau)=1,1\le k\le n}t_k^\ast) - \sum_{k=1}^n(r\cdot a_k^\ast\cdot \mathbb{I}(\tau))
+	U(r,\bm{a}^\ast) = \frac{1}{\zeta}\cdot \sum_{k=1}^n(\alpha\cdot a_k^\ast\cdot \mathbb{I}(\tau)) + \beta\cdot(T_{\max}-\max_{\mathbb{I}(\tau)=1,1\le k\le n}T_k^\ast) - \sum_{k=1}^n(r\cdot a_k^\ast\cdot \mathbb{I}(\tau))
 \end{equation}
 
 Taking the first derivative of $U(r,\bm{a}^\ast)$ with respect to $r$, we get:
@@ -197,36 +197,36 @@ Therefore, It is proved that $r^\ast = \frac{1}{\zeta}\cdot\sqrt{\sum_{k=1}^n(\g
 
 Ultimately, we find the unique Stackelberg-equilibrium of the game.
 \subsection{Algorithm}
-The pseudo-code of TiFedCrowd is shown in Algorithm~\ref{Algo1}. Lines 2-13 is the prodecure at server and lines 15-19 is at clients. Exactly, the process of the server-side includs the following 4 steps: estimate the minimum completion time (line 2), calculate the optimum response accuracy level at the given reward rate for each valid participant (lines 3-8), compute the optimum reward rate and announce it to clients, then wait until the deadline for them to complete the task (lines 10-12), receive the updated models and return the aggregated global model (lines 13).
+The pseudo-code of TiFedCrowd is shown in Algorithm~\ref{Algo1}. Lines 2-13 are the procedures at the server and lines 15-19 are for clients. Exactly, the process of the server-side includes the following 4 steps: estimate the minimum completion time (line 2), calculate the optimum response accuracy level at the given reward rate for each valid participant (lines 3-8), compute the optimum reward rate and announce it to clients, then wait until the deadline for them to complete the task (lines 10-12), receive the updated models and return the aggregated global model (lines 13).
 The process of the client includes the following 3 steps: receive
-the task completion time interval and the declared reward rate from the server (line 15), determine the optimum model training accuracy level and training to achieve it witnin the specified time interval (lines 17-18), and send the trained local model to server (line 19). 
+the task completion time interval and the declared reward rate from the server (line 15), determine the optimum model training accuracy level and training to achieve it within the specified time interval (lines 17-18), and send the trained local model to the server (line 19). 
 
 \begin{algorithm}[H]
 	\caption{\underline {Ti}me-controlled incentive \underline{Fed}erated \underline{Crowd}sourcing (TiFedCrowd)}
 	\label{Algo1}
 	\begin{algorithmic}[1]
 		\REQUIRE clients $\bm{\mathcal{N}} = \{1,2,\dots,n\}$; local data samples sets ${D_k}_{k=1}^n$; computation
-		parameters ${\gamma_k}_{k=1}^n$; size of the published model $\xi$;  system parameters $\alpha$ and $\beta$; completion deadline $T_{max}$.
+		parameters ${\gamma_k}_{k=1}^n$; size of the published model $\xi$;  system parameters $\alpha$ and $\beta$; completion deadline $T_{\max}$.
 		\ENSURE  global model $\Theta$.
 		\STATE Procedure at the Server:
-		\STATE Estimate the minimum completion time $T_{min}$.
+		\STATE Estimate the minimum completion time $T_{\min}$.
 		\FOR{all clients $k = 1 \to n$ in parallel}
-		\IF {completion time $t_k\in[T_{min},T_{max}]$}
+		\IF {completion time $T_k\in[T_{\min},T_{\max}]$}
 		\STATE Compute the client $k$’s utility $u_k$ at the given reward rates $r$ via Eq. (5).
 		\STATE Calculate the optimal response accuracy level $a_k^\ast$ via Eq. (11).
 		\ENDIF
 		\ENDFOR
 		\STATE Compute the task server’s utility via Eq. (14).
 		\STATE Choose the optimum reward rate $r^\ast$ via Eq. (16), then announce it to all clients.
-		\STATE Wait until time $T_{max}$ for clients to complete the data collection and model training.
+		\STATE Wait until time $T_{\max}$ for clients to complete the data collection and model training.
 		\STATE Receive the updated models ${\theta_k}_{k=1}^n$ and send the rewards to valid participants based on their accuracy level.
 		\STATE return the aggregated global model $\Theta$.
 		\STATE Procedure at the Client $k$:
-		\STATE Receive the time interval $[T_{min},T_{max}]$ and the reward rate $r$.
+		\STATE Receive the time interval $[T_{\min},T_{\max}]$ and the reward rate $r$.
 		\STATE Compute the client utility $u_k$ via Eq. (5).
 		\STATE Determine the training accuracy level $a_k^\ast$
 		to solve the local subproblem via Eq. (11).
-		\STATE Collect the required data and train local model for attaining the accuracy level $a_k^\ast$ within the time interval $[T_{min},T_{max}]$.
+		\STATE Collect the required data and train local model for attaining the accuracy level $a_k^\ast$ within the time interval $[T_{\min},T_{\max}]$.
 		\STATE Upload the trained local model $\theta_k$ to the server.
 	\end{algorithmic}
 \end{algorithm}
