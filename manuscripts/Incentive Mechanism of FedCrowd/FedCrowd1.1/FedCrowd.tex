@@ -83,7 +83,7 @@ To overcome the above defects, researchers introduced federated learning, which 
 \subsection{Incentive Mechanism in Federated Learning}
 An incentive mechanism is necessary to ensure the quality and efficiency of FL. The participation of clients in FL consumes computing resources, occupies network bandwidth, and even shortens the battery life of client devices. Clients are not willing to make sacrifices to participate in FL without any return. Accordingly, there is a growing body of research on the incentive mechanism of FL. \cite{zhan2020learn} designed a deep reinforcement learning-based incentive mechanism to determine the optimal pricing strategy for the parameter server and the optimal training strategies for edge nodes. \cite{le2021incentive} formulated the incentive mechanism between the base station and mobile users as an auction game and further proposed the primal-dual greedy auction mechanism to decide winners in the auction and maximize social welfare. \cite{zhang2021incentive} proposed an incentive mechanism of FL based on reputation and reverse auction theory, which selects and rewards participants by combining the reputation and bids of the participants under a limited budget.  \cite{9317806} modeled each data owner's contribution and the three categories of computing, communication, and privacy costs based on a multi-dimensional contract approach. \cite{pandey2019incentivize} introduced the crowdsourcing framework into FL and developed a two-stage Starkelberg game to maintain communication efficiency when participating clients implement uncoordinated computation strategy during aggregation of model parameters. \cite{kang2022incentive} proposed the incentive-boosted Federated Crowdsourcing and modeled the incentive-based interaction between the crowdsourcing platform and participating workers as a Stackelberg game to encourage workers to constantly collect fresh data.
 
-Unfortunately, none of these incentive mechanisms works well in federated crowdsourcing that needs to collect data samples manually (i.e., so-call data crowdsourcing). Moreover, they all ignore the relationship between the time that workers collect data and the quality of submitted data in federated crowdsourcing and fail to respond to some delays in receiving data. The proposed TiFedCrowd in this study sets a time interval whose lower bound preliminarily screens the quality of submitted data and whose upper bound enables the task publisher to specify the fresh level of the data. Furthermore, the contribution of a worker is measured according to the accuracy with which the client completes a local training model within the given time, and the rewards are fairly allocated in an economical manner, so as to motivate more workers to complete crowdsourcing tasks with high quality and efficiency.
+Unfortunately, none of these incentive mechanisms works well in federated crowdsourcing that needs to collect data samples manually (i.e., so-call data crowdsourcing). Moreover, they all ignore the relationship between the time that workers collect data and the quality of submitted data in federated crowdsourcing and fail to respond to some delays in receiving data. The proposed TiFedCrowd in this study sets a time interval whose lower bound preliminarily screens the quality of submitted data and whose upper bound enables the task publisher to specify the fresh level of the data. Furthermore, the contribution of a worker is measured according to the accuracy \footnote{In this study, we simply use accuracy to measure the performance of learning models.} with which the client completes a local training model within the given time, and the rewards are fairly allocated in an economical manner, so as to motivate more workers to complete crowdsourcing tasks with high quality and efficiency.
 
 \section{Methodology} \label{sec:mtd}
 In this section, we first present the federated crowdsourcing problem settings. Then, we present the proposed incentive mechanism as a two-stage Stackelberg game and also derive its equilibrium. Next, we summarize the whole process as an algorithm. Finally, we prove that time control is necessary for federated crowdsourcing.
@@ -103,43 +103,47 @@ Figure~\ref{fig:framework} shows the framework of the proposed TiFedCrowd model.
 The proposed TiFedCrowd aims to achieve a win-win situation using a novel incentive mechanism. Ideally, the server-side tries to encourage clients to contribute high-quality local models using as less as budget. whereas, the clients try to obtain more rewards by providing qualified outcomes within the specified time interval. Clearly, it is a gaming process. In the following sections, we will show that TiFedCrowd can reach an equilibrium status, where the utilities of both server and clients can be optimal. We will also show that introducing the time interval $[T_{\min}, T_{\max}]$ not only brings practical values (controlling the fresh levels of local models and filtering out low-quality local models) but also theoretically improves the utility of the server and the performance of the global model.
 
 \subsection{Incentive Mechanism: The Two-Stage Stackelberg Game}
-In the proposed time-controlled incentive federated crowdsourcing model, the data requester rewards clients who complete tasks within the specified time to achieve optimal local accuracy, thereby optimizing the global model. Simultaneously, upon receiving the rewards, rational clients will maximize their own profits respectively. We model such an interaction scenario as a two-stage Stackelberg game between a server (leader) and multiple clients(followers). In stage \uppercase\expandafter{\romannumeral2}, each client individually determines his/her own training accuracy with the announced reward to maximize profit. In stage \uppercase\expandafter{\romannumeral1}, the server decides on the reward rate for clients to maximize the net utility and train the high-quality global model.
+In the proposed time-controlled incentive federated crowdsourcing model, the data requester rewards clients who complete tasks within the specified time to achieve optimal local accuracy, thereby optimizing the global model. Simultaneously, upon receiving the rewards, rational clients will maximize their own profits respectively by improving the accuracy of the local models. We model such an interaction scenario as a two-stage Stackelberg game between a server (leader) and multiple clients (followers). In the Stackelberg game, both parties choose their own strategies based on the other's possible strategies to ensure that they maximize their interests under the other's strategy, so as to achieve the Nash equilibrium. The party that makes a decision first is called the leader. The remaining players (followers) make decisions based on the leader's decision. Then, the leader and followers adjust the initial decisions to make final better decisions by predicting the other party's response to their own decisions. The process is repeated until reaching the Nash equilibrium. 
 
-\textbf{Stage \uppercase\expandafter{\romannumeral2} (Clients):} In the clients stage, the server will Initially announce the uniform reward rate $r>0$ and time interval $[T_{min},T_{max}]$ for the participating clients. Rationally, for a client $k$, the reward $v_k$ is related to the accuracy level $a_k$ of the local model $\theta_k$. Intuitively, the higher the local accuracy level, the greater the revenue:
-\begin{equation}
-	v_k = r\cdot a_k\cdot \mathbb{I}(\tau)
-\end{equation}
-where $\mathbb{I}(\tau)$ is an indicator function that returns $1$ if the condition $\tau$ is true and $0$ otherwise. Only if the completion time $T_k$ meets condition $\tau: T_k\in[T_{\min},T_{\max}]$ will the model $\theta_k$ be received by the server and the reward $v_k$ be allocated. We refer to clients whose models are successfully accepted by the server as valid participants. Then a rational worker will try to collect data to train local model for high accuracy within the time limit for maximizing the revenue. 
+Under our problem settings, the server first publishes local model requirements. Then, in Stage \uppercase\expandafter{\romannumeral2}, each client individually determines his/her own training accuracy according to the announced reward to maximize profit. After clients submit their work outcomes. In stage \uppercase\expandafter{\romannumeral1}, the server decides on the reward rate for clients to maximize the net utility and train the high-quality global model.
 
-However, training on local data for a defined accuracy level to improve the global model inevitably incurs a cost for the clients, mainly the computation cost $c_k^{comp}$ and the communication cost $c_k^{comm}$ included:
-\begin{equation}
-	c_k^{comp} + c_k^{comm} = c_k
+\textbf{Stage \uppercase\expandafter{\romannumeral2} (Clients):} In the client stage, the server will initially announce the uniform reward rate $r>0$ and time interval $[T_{\min},T_{\max}]$ for the participating clients. Rationally, for a client $k$, the reward $v_k$ is related to the accuracy level $a_k$ of the local model $\theta_k$. Intuitively, the higher the local accuracy level, the greater the revenue is:
+\begin{equation}\label{eq:reward}
+	v_k = r\cdot a_k\cdot \mathbb{I}(\tau),
 \end{equation}
-where $c_k$ denotes the total cost of client $k$'s participation. The computation cost $c_k^{comp}$ is relevant to the number of iterations for training the local model $\theta_k$ to the aim accuracy $a_k$. According to the relationship between iterations and accuracy in the local model training described in \citep{pandey2020crowdsourcing}, the computation cost of client $k$ is defined as
-\begin{equation}
-	c_k^{comp} = \gamma_k\cdot \log(\frac{1}{1-a_k})
-\end{equation}
-where $\gamma_k>0$ is a parameter choice of client $k$ that depends on the local subproblem whose data size and condition number. Therefore, the more iterations, the more computing resources the client spends.
+where $\mathbb{I}(\tau)$ is an indicator function that returns $1$ if the condition $\tau$ is true and $0$ otherwise. Only if the completion time $T_k$ meets condition $\tau: T_k\in[T_{\min},T_{\max}]$ will the model $\theta_k$ be accepted by the server and the reward $v_k$ be allocated. We refer to clients whose models are successfully accepted by the server as valid participants. Then, a rational worker will try to collect data to train a local model with high accuracy within the time limit for maximization of the revenue.  
 
-The communication cost is related to the size of the model parameters and incurred when the client interacts with server for the model update. Since the to-be-trained model is published uniformly by the server, the total communication cost is the same for all clients:
+Obviously, it inevitably brings costs $c_k$ for client $k$ to train a local model with a pre-defined accuracy on local data that can improve the global model. The costs include the computation cost $c_k^{comp}$ and the communication cost $c_k^{comm}$. That is, 
+\begin{equation}\label{eq:cost}
+	c_k	= c_k^{comp} + c_k^{comm}.
+\end{equation}
+Here, $c_k$ can be treated as the total cost of client $k$'s participation. The computation cost $c_k^{comp}$ is relevant to the number of iterations for training the local model $\theta_k$ to the target accuracy $a_k$. According to the relationship between iterations and accuracy in the local model training described in \citep{pandey2020crowdsourcing}, the computation cost of client $k$ is defined as follows:
 \begin{equation}
-	c_k^{comm} = \lambda\cdot\xi
+	c_k^{comp} = \gamma_k\cdot \log(\frac{1}{1-a_k}),
+\end{equation}
+where $\gamma_k>0$ is a parameter choice of client $k$ that depends on the data size and condition number of the local subproblem. Therefore, the more iterations of the local model training, the more computing resources the client spends.
+
+The communication cost is related to the size of the model parameters and is incurred when the client interacts with the server for the model update. Since the to-be-trained model is published uniformly by the server, the total communication cost is the same for all clients as follows:
+\begin{equation}
+	c_k^{comm} = \lambda\cdot\xi,
 \end{equation}
 where $\lambda$ is a constant coefficient and $\xi$ represents the size of the model parameter.
 
-Combined with the reward (1) and cost (2) of the client, we define the client utility model for the valid participant as:
+Combining reward in Eq. (\ref{eq:reward}) and cost in Eq. (\ref{eq:cost}) of the client, for a valid participant, we define the utility of a client as follows:
 \begin{equation}
-	u_k = r\cdot a_k - c_k, \quad only\,\: if\quad\mathbb{I}(\tau) = 1
+	u_k = r\cdot a_k - c_k, \quad only\,\: if\quad\mathbb{I}(\tau) = 1.
 \end{equation}
-\textbf{Stage \uppercase\expandafter{\romannumeral1} (Server):} In the server stage of the game, the server can evaluate the optimal reward rate $r^\ast$ to maximize its net utility according to the response of valid participants. Let $\zeta$ be the number of valid participants:
+
+\textbf{Stage \uppercase\expandafter{\romannumeral1} (Server):} In the server stage of the game, the server can evaluate the optimal reward rate $r^\ast$ to maximize its net utility according to the response of valid participants. Let $\zeta$ be the number of valid participants, i.e.,
 \begin{equation}
-	\zeta = \sum_{k=1}^n\mathbb{I}(\tau)
+	\zeta = \sum_{k=1}^n\mathbb{I}(\tau).
 \end{equation}
-The server utility model can be defined in relation to the maximum completion time of valid participants and the final model performance achieved with average local accuracy level:
+The utility of the server can be defined in relation to the maximum completion time of valid participants and the performance of the final global model achieved based on average local accuracy level. That is, 
 \begin{equation}
-	U = \frac{1}{\zeta}\cdot \sum_{k=1}^n(\alpha\cdot a_k\cdot \mathbb{I}(\tau)) + \beta\cdot(T_{\max}-\max_{\mathbb{I}(\tau)=1,1\le k\le n}T_k) - \sum_{k=1}^n(r\cdot a_k\cdot \mathbb{I}(\tau))
+	U = \frac{1}{\zeta}\cdot \sum_{k=1}^n\left(\alpha\cdot a_k\cdot \mathbb{I}(\tau)\right) + \beta\cdot(T_{\max}-\max_{\mathbb{I}(\tau)=1,1\le k\le n}T_k) - \sum_{k=1}^n\left(r\cdot a_k\cdot \mathbb{I}(\tau)\right),
 \end{equation}
-where $\alpha > 0$ and $\beta \ge 0$ (default $\beta = 0$, and $\beta > 0$ only makes sense in instant crowdsourcing.) are system parameters, and $\sum_{k=1}^n(r\cdot a_k\cdot \mathbb{I}(\tau))$ is the cost totally spent for incentivizing clients to validly participate in federated crowdsourcing.
+where $\alpha > 0$ and $\beta \ge 0$ are system parameters, and $\sum_{k=1}^n(r\cdot a_k\cdot \mathbb{I}(\tau))$ is the cost totally spent for incentivizing clients that have validly participated in federated crowdsourcing. By default, we have $\beta = 0$, and $\beta > 0$ only makes sense in instant crowdsourcing (fresh data/model needs to be collected/trained constantly).
+
 \subsection{Stackelberg-equilibrium}
 In this subsection, we will find the optimal solution to maximize the utility of clients and server by deducing the Stackelberg-equilibrium. 
 
