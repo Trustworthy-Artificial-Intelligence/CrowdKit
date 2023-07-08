@@ -19,6 +19,7 @@
 
 \renewcommand{\algorithmicrequire}{\textbf{Input:}}  
 \renewcommand{\algorithmicensure}{\textbf{Output:}}
+\newtheorem{myDef}{Definition}
 
 %\journal{Expert Systems With Applications}
 
@@ -130,7 +131,7 @@ The communication cost is related to the size of the model parameters and is inc
 where $\lambda$ is a constant coefficient and $\xi$ represents the size of the model parameter.
 
 Combining reward in Eq. (\ref{eq:reward}) and cost in Eq. (\ref{eq:cost}) of the client, for a valid participant, we define the utility of a client as follows:
-\begin{equation}
+\begin{equation}\label{eq:client-u}
 	u_k = r\cdot a_k - c_k, \quad only\,\: if\quad\mathbb{I}(\tau) = 1.
 \end{equation}
 
@@ -139,131 +140,135 @@ Combining reward in Eq. (\ref{eq:reward}) and cost in Eq. (\ref{eq:cost}) of the
 	\zeta = \sum_{k=1}^n\mathbb{I}(\tau).
 \end{equation}
 The utility of the server can be defined in relation to the maximum completion time of valid participants and the performance of the final global model achieved based on average local accuracy level. That is, 
-\begin{equation}
+\begin{equation}\label{Eq:server-u}
 	U = \frac{1}{\zeta}\cdot \sum_{k=1}^n\left(\alpha\cdot a_k\cdot \mathbb{I}(\tau)\right) + \beta\cdot(T_{\max}-\max_{\mathbb{I}(\tau)=1,1\le k\le n}T_k) - \sum_{k=1}^n\left(r\cdot a_k\cdot \mathbb{I}(\tau)\right),
 \end{equation}
 where $\alpha > 0$ and $\beta \ge 0$ are system parameters, and $\sum_{k=1}^n(r\cdot a_k\cdot \mathbb{I}(\tau))$ is the cost totally spent for incentivizing clients that have validly participated in federated crowdsourcing. By default, we have $\beta = 0$, and $\beta > 0$ only makes sense in instant crowdsourcing (fresh data/model needs to be collected/trained constantly).
 
-\subsection{Stackelberg-equilibrium}
-In this subsection, we will find the optimal solution to maximize the utility of clients and server by deducing the Stackelberg-equilibrium. 
+\subsection{Nash Equilibrium}
+In this subsection, we will present the optimal solution to maximize the utility of both clients and the server by deducing the Nash equilibrium.
 
-Definition 1. Stackelberg-equilibrium. For any values of $r$ and $\bm{a}$, $(r^\ast,\bm{a}^\ast)$ is a Stackelberg-equilibrium if  it satisfies the following conditions:
+\begin{myDef}
+	Nash Equilibrium. For any values of $r$ and $\bm{a}$, $(r^\ast,\bm{a}^\ast)$ is a Nash equilibrium if they satisfy the following conditions:
+	\begin{equation}
+		U(r^\ast,\bm{a}^\ast) \ge U(r,\bm{a}^\ast),
+	\end{equation}	
+	\begin{equation}
+		u_k(r^\ast,a_k^\ast) \ge u_k(r^\ast,a_k),\, \forall k \in \bm{\mathcal{N}}.
+	\end{equation}	
+\end{myDef}
+
+To find the equilibrium of the client stage in the game, we take the first derivative of $u_k(r,a_k)$ with respect to $a_k$ as follows:
 \begin{equation}
-	U(r^\ast,\bm{a}^\ast) \ge U(r,\bm{a}^\ast)
+	\frac{\partial u_k(r,a_k)}{\partial a_k} = r-\frac{\gamma_k}{1-a_k}.
 \end{equation}	
+Let $\frac{\partial u_k(r,a_k)}{\partial a_k} = 0$, we have
+\begin{equation}\label{eq:a_k_ast}
+	a_k^\ast = 1 - \frac{\gamma_k}{r}.
+\end{equation}	
+Then, we take the second derivative of $u_k(r,a_k)$ with respect to $a_k$ as follows:
 \begin{equation}
-	u_k(r^\ast,a_k^\ast) \ge u_k(r^\ast,a_k),\, \forall k \in \bm{\mathcal{N}}
+	\frac{\partial^2 u_k(r,a_k)}{\partial a_k^2} = - \frac{\gamma_k}{(1-a_k)^2} < 0.
 \end{equation}	
+Hence, we derive and prove that $a_k^\ast = 1 - \frac{\gamma_k}{r}$ is the global optimal response accuracy of the client and is unique.
 
-To find the equilibrium of the clients stage game, we take the first derivative of $u_k(r,a_k)$ with respect to $a_k$:
-\begin{equation}
-	\frac{\partial u_k(r,a_k)}{\partial a_k} = r-\frac{\gamma_k}{1-a_k}
-\end{equation}	
-
-Setting $\frac{\partial u_k(r,a_k)}{\partial a_k} = 0$, we have
-\begin{equation}
-	a_k^\ast = 1 - \frac{\gamma_k}{r}
-\end{equation}	
-
-Then, we take the second derivative of $u_k(r,a_k)$ with respect to $a_k$:
-\begin{equation}
-	\frac{\partial^2 u_k(r,a_k)}{\partial a_k^2} = - \frac{\gamma_k}{(1-a_k)^2} < 0
-\end{equation}	
-
-Hence, We derive and prove that $a_k^\ast = 1 - \frac{\gamma_k}{r}$ is the global optimal response accuracy of the client and is unique.
-
-Since $0<a_k^\ast<1$, we can derive the value range of the reward rate $r$:
+Since we have $0<a_k^\ast<1$, we can derive the value range of the reward rate $r$ as follows:
 \begin{equation}
 	0 < a_k^\ast = 1 - \frac{\gamma_k}{r} < 1\quad
-	\Leftrightarrow\quad r > \gamma_k
+	\Leftrightarrow\quad r > \gamma_k.
 \end{equation}	
-
-Based on the above derivations for clients (followers), as the leader in the game, the server can deduce the unique Stackelberg-equilibrium among valid participants for any reward rate $r>\gamma_k$. Accordingly, the server can choose the optimal reward rate $r^\ast$ to maximize its net utility. Based upon the sets of the completion time $\bm{T}^\ast$ and the optimum response accuracy $\bm{a}^\ast$, the server utility model is defined as:
-\begin{equation}
-	U(r,\bm{a}^\ast) = \frac{1}{\zeta}\cdot \sum_{k=1}^n(\alpha\cdot a_k^\ast\cdot \mathbb{I}(\tau)) + \beta\cdot(T_{\max}-\max_{\mathbb{I}(\tau)=1,1\le k\le n}T_k^\ast) - \sum_{k=1}^n(r\cdot a_k^\ast\cdot \mathbb{I}(\tau))
+Based on the above derivations for clients (followers), as the leader in the game, the server can deduce the unique Nash equilibrium among valid participants for any reward rate $r>\gamma_k$. Accordingly, the server can choose the optimal reward rate $r^\ast$ to maximize its net utility. Based upon the sets of the completion time $\bm{T}^\ast$ and the optimum response accuracy $\bm{a}^\ast$, utility of the server is defined as follows:
+\begin{equation}\label{eq:opt_u}
+	U(r,\bm{a}^\ast) = \frac{1}{\zeta}\cdot \sum_{k=1}^n(\alpha\cdot a_k^\ast\cdot \mathbb{I}(\tau)) + \beta\cdot(T_{\max}-\max_{\mathbb{I}(\tau)=1,1\le k\le n}T_k^\ast) - \sum_{k=1}^n(r\cdot a_k^\ast\cdot \mathbb{I}(\tau)).
 \end{equation}
 
-Taking the first derivative of $U(r,\bm{a}^\ast)$ with respect to $r$, we get:
+Taking the first derivative of $U(r,\bm{a}^\ast)$ with respect to $r$, we obtain
 \begin{equation}
 	\begin{aligned}
 		\frac{\partial U(r,\bm{a}^\ast)}{\partial r} &= \frac{1}{\zeta}\cdot \sum_{k=1}^n(\alpha\cdot \frac{\partial a_k^\ast}{\partial r}\cdot \mathbb{I}(\tau)) - \sum_{k=1}^n(r\cdot \frac{\partial a_k^\ast}{\partial r}\ast\cdot \mathbb{I}(\tau)) - \sum_{k=1}^n(a_k^\ast\cdot \mathbb{I}(\tau))\\
-		&= \frac{\alpha}{\zeta\cdot r^2}\cdot\sum_{k=1}^n(\gamma_k\cdot\mathbb{I}(\tau))-\zeta
+		&= \frac{\alpha}{\zeta\cdot r^2}\cdot\sum_{k=1}^n(\gamma_k\cdot\mathbb{I}(\tau))-\zeta.
 	\end{aligned}
 \end{equation}
-
-Setting $\frac{\partial U(r,\bm{a}^\ast)}{\partial r} = 0$, we have:
-\begin{equation}
-	r^\ast =\frac{1}{\zeta}\cdot\sqrt{\sum_{k=1}^n(\gamma_k\cdot\mathbb{I}(\tau))}
+Let $\frac{\partial U(r,\bm{a}^\ast)}{\partial r} = 0$, we have
+\begin{equation}\label{eq:opt_r}
+	r^\ast =\frac{1}{\zeta}\cdot\sqrt{\sum_{k=1}^n(\gamma_k\cdot\mathbb{I}(\tau))}.
 \end{equation}	
-
-The second derivative of $u_k(r,a_k)$ with respect to $a_k$ is:
+The second derivative of $u_k(r,a_k)$ with respect to $a_k$ is as follows
 \begin{equation}
-	\frac{\partial^2 U(r,\bm{a}^\ast)}{\partial r^2} = - \frac{2\cdot\alpha}{\zeta\cdot r^3}\cdot\sum_{k=1}^n(\gamma_k\cdot\mathbb{I}(\tau)) < 0
+	\frac{\partial^2 U(r,\bm{a}^\ast)}{\partial r^2} = - \frac{2\cdot\alpha}{\zeta\cdot r^3}\cdot\sum_{k=1}^n(\gamma_k\cdot\mathbb{I}(\tau)) < 0.
 \end{equation}	
+Therefore, we have proved that $r^\ast = \frac{1}{\zeta}\cdot\sqrt{\sum_{k=1}^n(\gamma_k\cdot\mathbb{I}(\tau))}$ is the global optimal reward rate and it is unique. 
 
-Therefore, It is proved that $r^\ast = \frac{1}{\zeta}\cdot\sqrt{\sum_{k=1}^n(\gamma_k\cdot\mathbb{I}(\tau))}$ is the global optimal reward rate and unique. 
+To sum up, we have found the unique Nash equilibrium of the proposed incentive mechanism under federated crowdsourcing.
 
-Ultimately, we find the unique Stackelberg-equilibrium of the game.
-\subsection{Why we need the time control.}
-To ensure the quality and efficiency of crowdsourcing, TiFedCrowd limits the time for the clients to complete the federated crowdsourcing tasks by setting a time interval $[T_{\min},T_{\max}]$. The upper bound $T_{\max}$ is set by the data requester according to his/her needs, which responds to delays in receiving data due to device and network failures as well as disruptions on clients rather than waiting passively. In addition, the completion deadline $T_{\max}$ also indicates the data requester's recognition of the freshness of the data. In other words, as long as the data submitted before $T_{\max}$ is considered fresh. The lower bound $T_{\min}$ is calculated by the server based on the task difficulty level and network quality, which prevents malicious clients from submitting low-quality data for quick rewards. The ultimate goal of TiFedCrowd is to obtain a high-quality global model, based on which we demonstrate that time control is necessary for federal crowdsourcing.
+\subsection{Why Time Control Important}
+To ensure the quality and efficiency of crowdsourcing, TiFedCrowd limits the time for the clients to complete the federated crowdsourcing tasks by setting a time interval $[T_{\min},T_{\max}]$. The upper bound $T_{\max}$ is set by the data/model requester according to his/her needs. $T_{\max}$ can make the server timely respond to the delays in receiving data which resulted from device and network failures as well as disruptions on clients rather than waiting passively. In addition, the completion deadline $T_{\max}$ also indicates the requester's recognition of the freshness of the data/models. In other words, as long as the data/models are submitted before $T_{\max}$, they are considered fresh. In addition, the completion deadline $T_{\max}$ also indicates the data requester's recognition of the freshness of the data. In other words, as long as the data submitted before $T_{\max}$ is considered fresh. The lower bound $T_{\min}$ is calculated by the server based on the task difficulty and network quality, which prevents malicious clients from submitting low-quality data/model for quick rewards. The ultimate goal of TiFedCrowd is to obtain a high-quality global model, based on which we demonstrate that time control is necessary for federal crowdsourcing.
 
-According to (7), the definition of the server utility model without time control is as follows: 
+Based on Eq.~(\ref{Eq:server-u}), we remove the time control in the definition of the server utility as follows: 
 \begin{equation}
-	\bar{U} = \frac{1}{n}\cdot \sum_{k=1}^n(\alpha\cdot a_k)  - \sum_{k=1}^n(r\cdot a_k)
+	\bar{U} = \frac{1}{n}\cdot \sum_{k=1}^n(\alpha\cdot a_k)  - \sum_{k=1}^n(r\cdot a_k),
 \end{equation}
 where $\sum_{k=1}^n(r\cdot a_k)$ is the cost totally spent for incentivizing clients to participate in federated crowdsourcing. Apparently, the total cost $\sum_{k=1}^n(r\cdot a_k)$ for the server without time control is more than $\sum_{k=1}^n(r\cdot a_k\cdot \mathbb{I}(\tau))$ for one with time control.
 
-To compare the magnitude of $\bar{U}$ and $U$, we take the difference of $\bar{U}$ minus $U$:
+To compare the magnitude of $\bar{U}$ and $U$, we take the difference between $\bar{U}$ and $U$:
 \begin{equation}
-	\bar{U} -U = \frac{1}{n}\cdot \sum_{k=1}^n(\alpha\cdot a_k)-\frac{1}{\zeta}\cdot \sum_{k=1}^n(\alpha\cdot a_k\cdot \mathbb{I}(\tau))- \beta\cdot(T_{\max}-\max_{\mathbb{I}(\tau)=1,1\le k\le n}T_k) - \sum_{k=1}^n(r\cdot a_k\cdot (1-\mathbb{I}(\tau)))
+	\bar{U} -U = \frac{1}{n}\cdot \sum_{k=1}^n(\alpha\cdot a_k)-\frac{1}{\zeta}\cdot \sum_{k=1}^n(\alpha\cdot a_k\cdot \mathbb{I}(\tau))- \beta\cdot(T_{\max}-\max_{\mathbb{I}(\tau)=1,1\le k\le n}T_k) - \sum_{k=1}^n(r\cdot a_k\cdot (1-\mathbb{I}(\tau))).
 \end{equation}
-
-For those data submitted after the deadline $T_{\max}$, whose data freshness does not meet the requirements of the data requester, we consider the accuracy level of their contribution to be $0$. Since TiFedCrowd uses the time control mechanism to screen out low-quality data, we have the following results:
+For those data/models submitted after the deadline $T_{\max}$, whose freshness does not meet the requirements of the requester, we consider the accuracy level of their contributions to be $0$. Since TiFedCrowd uses the time control mechanism to filter out low-quality data/models, we have the following results:
 \begin{equation}
 	\begin{aligned}
 		\frac{1}{n}\cdot \sum_{k=1}^n\cdot a_k < \frac{1}{\zeta}\cdot \sum_{k=1}^n\cdot a_k\cdot \mathbb{I}(\tau)\quad
-		&\Leftrightarrow\quad \frac{1}{n}\cdot \sum_{k=1}^n(\alpha\cdot a_k)-\frac{1}{\zeta}\cdot \sum_{k=1}^n(\alpha\cdot a_k\cdot \mathbb{I}(\tau))<0\\&\Leftrightarrow\quad  \bar{U} -U<0\quad\Leftrightarrow\quad  \bar{U} < U
+		&\Leftrightarrow\quad \frac{1}{n}\cdot \sum_{k=1}^n(\alpha\cdot a_k)-\frac{1}{\zeta}\cdot \sum_{k=1}^n(\alpha\cdot a_k\cdot \mathbb{I}(\tau))<0\\&\Leftrightarrow\quad  \bar{U} -U<0\quad\Leftrightarrow\quad  \bar{U} < U.
 	\end{aligned}
 \end{equation}	
 
 In summary, we show that the server without time control has less utility and more incentivizing cost than the one with it. consequently, time control is critical to federated crowdsourcing.
+
 \subsection{Algorithm}
-The pseudo-code of TiFedCrowd is shown in Algorithm~\ref{Algo1}. Lines 2-13 are the procedures at the server and lines 15-19 are for clients. Exactly, the process of the server-side includes the following 4 steps: estimate the minimum completion time (line 2), calculate the optimum response accuracy level at the given reward rate for each valid participant (lines 3-8), compute the optimum reward rate and announce it to clients, then wait until the deadline for them to complete the task (lines 10-12), receive the updated models and return the aggregated global model (lines 13).
-The process of the client includes the following 3 steps: receive
-the task completion time interval and the declared reward rate from the server (line 15), determine the optimum model training accuracy level and training to achieve it within the specified time interval (lines 17-18), and send the trained local model to the server (line 19). 
+The pseudo-code of TiFedCrowd is shown in Algorithm~\ref{Algo1}. Lines 2-13 are the procedures on the server side and lines 15-19 are for clients. Precisely, the process of the server side includes the following four steps: 1) estimate the minimum completion time (line 2); 2) calculate the optimum response accuracy at the given reward rate for each valid participant (lines 3-8); 3) computing the optimum reward rate, and announce it to clients, then wait until the deadline for them to complete the tasks (lines 10-12); 4) receive the updated models and return the aggregated global model (line 13).
+
+The process of the client side includes the following three steps: 1) receive the task completion time interval and the declared reward rate from the server (line 15); 2) determine the optimum model accuracy and train a local model to achieve the accuracy within the specified time interval (lines 17-18); 3) send the trained local model to the server (line 19).
 
 \begin{algorithm}[H]
 	\caption{\underline {Ti}me-controlled incentive \underline{Fed}erated \underline{Crowd}sourcing (TiFedCrowd)}
 	\label{Algo1}
 	\begin{algorithmic}[1]
-		\REQUIRE clients $\bm{\mathcal{N}} = \{1,2,\dots,n\}$; local data samples sets $\{D_k\}_{k=1}^n$; computation
+		\REQUIRE clients $\bm{\mathcal{N}} = \{1,2,\dots,n\}$; local data sample sets $\{D_k\}_{k=1}^n$; computation
 		parameters $\{\gamma_k\}_{k=1}^n$; size of the published model $\xi$;  system parameters $\alpha$ and $\beta$; completion deadline $T_{\max}$.
-		\ENSURE  global model $\Theta$.
-		\STATE Procedure at the Server:
+		\ENSURE global learning model $\Theta$.\\
+		\COMMENT{\textit{Procedure at the server}}
+		\STATE Sever initializes...
 		\STATE Estimate the minimum completion time $T_{\min}$.
 		\FOR{all clients $k = 1 \to n$ in parallel}
 		\IF {completion time $T_k\in[T_{\min},T_{\max}]$}
-		\STATE Compute the client $k$’s utility $u_k$ at the given reward rates $r$ via Eq. (5).
-		\STATE Calculate the optimal response accuracy level $a_k^\ast$ via Eq. (11).
+		\STATE Compute the client $k$’s utility $u_k$ at the given reward rates $r$ via Eq. (\ref{eq:client-u}).
+		\STATE Calculate the optimal response accuracy $a_k^\ast$ via Eq. (\ref{eq:a_k_ast}).
 		\ENDIF
 		\ENDFOR
-		\STATE Compute the task server’s utility via Eq. (14).
-		\STATE Choose the optimum reward rate $r^\ast$ via Eq. (16), then announce it to all clients.
+		\STATE Compute the server’s utility via Eq. (\ref{eq:opt_u}).
+		\STATE Choose the optimum reward rate $r^\ast$ via Eq. (\ref{eq:opt_r}), then announce it to all clients.
 		\STATE Wait until time $T_{\max}$ for clients to complete the data collection and model training.
-		\STATE Receive the updated models ${\theta_k}_{k=1}^n$ and send the rewards to valid participants based on their accuracy level.
-		\STATE return the aggregated global model $\Theta$.
-		\STATE Procedure at the Client $k$:
+		\STATE Receive the updated models $\{\theta_k\}_{k=1}^n$ and send the rewards to valid participants based on their accuracy levels. Aggregate the global model $\Theta$.
+		\RETURN the global model $\Theta$.\\
+		\COMMENT{\textit{Procedure at client $k$}}
+		\STATE Client initializes...
 		\STATE Receive the time interval $[T_{\min},T_{\max}]$ and the reward rate $r$.
-		\STATE Compute the client utility $u_k$ via Eq. (5).
-		\STATE Determine the training accuracy level $a_k^\ast$
-		to solve the local subproblem via Eq. (11).
+		\STATE Compute the client utility $u_k$ via Eq. (\ref{eq:client-u}).
+		\STATE Determine the training accuracy $a_k^\ast$ to solve the local subproblem via Eq. (\ref{eq:a_k_ast}).
 		\STATE Collect the required data and train local model for attaining the accuracy level $a_k^\ast$ within the time interval $[T_{\min},T_{\max}]$.
-		\STATE Upload the trained local model $\theta_k$ to the server.
+		\RETURN the trained local model $\theta_k$ to the server.
 	\end{algorithmic}
 \end{algorithm}
-The complexity analysis of this algorithm needs to be discussed from the client-side and the server-side respectively. On the client side, the main time consumption of the algorithm is data collection and model training. The data collection time is $O(m)$, where $m$ is the number of tasks collected by the client. The model training time is $O(\log(a_k^{-1}))$, related to  train the local model for attaining the accuracy $a_k$. Hence, the time complexity of TiFedCrowd on the client-side is $S[O(m)+O(\log(a_k^{-1}))]$ and the space complexity is $O(\xi)$ ($\xi$ is the size of model parameters). On the server side, the main time consumption is to interact with the $n$ clients and the main space consumption is to aggregate the $n$ client models. Therefore, the time complexity of TiFedCrowd on the server-side is $O(n)$ and the space complexity is $O(n\cdot\xi)$.
+
+The time complexity analysis of this algorithm needs to be discussed from the client side and the server side respectively. On the client side, the main time consumption of the algorithm is data collection and model training. The data collection time complexity is $O(m)$, where $m$ is the number of tasks collected by the client. The model training time complexity is $O(\log(a_k^{-1}))$, related to training the local model for attaining the accuracy $a_k$. Hence, the total time complexity of TiFedCrowd on the client side is $S[O(m)+O(\log(a_k^{-1}))]$. The space complexity is $O(\xi)$, where $\xi$ is the size of model parameters. On the server side, the main time consumption is to interact with the $n$ clients and the main space consumption is to aggregate the $n$ client models. Therefore, the time complexity of TiFedCrowd on the server side is $O(n)$ and the space complexity is $O(n\cdot\xi)$.
+
 \section{Experiments} \label{sec:exp}
+Experiments go here...
 \section{Conclusion} \label{sec:con}
+Conclusion goes here...
+
+\section*{Acknowledgments}
+
 
 \bibliography{ref,reference1}
 \end{document}
