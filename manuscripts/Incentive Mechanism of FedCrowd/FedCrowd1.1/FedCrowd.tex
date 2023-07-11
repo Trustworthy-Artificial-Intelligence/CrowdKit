@@ -99,7 +99,7 @@ In this section, we first present the federated crowdsourcing problem settings. 
 \subsection{Problem Settings}
 Let $\bm{\mathcal{N}} = \{1,2,\dots,n\}$ be a group of workers participating in federated crowdsourcing. For each worker $k\in\bm{\mathcal{N}}$, let $D_k=\{\bm{x_i}^k,y_i^k\}_{i=1}^m$ be the data sample set, where $m$ is the number of tasks, $\bm{x_i}^k\in\mathbb{R}^d$ is a vector with $d$ features representing the task for annotation, and $y_i^k\in\mathbb{R}$ is the label annotated for task $\bm{x_i}^k$ by worker $k$. To achieve privacy protection, TiFedCrowd requires that $D_k$ be kept locally and not shared with the server or other clients. In addition, each client trains its own local model $\theta_k$ through $D_k$ to collaboratively train the shared model $\Theta$.
 
-Figure~\ref{fig:framework} shows the framework of the proposed TiFedCrowd model. The data requester first publishes task requirements and the allowed maximum completion time $T_{\max}$ through a crowdsourcing platform. Then, the platform (server) calculates the allowed minimum completion time $T_{\min}$ by evaluating task difficulty level and network quality and announces it to all clients along with the to-be-trained model $\theta$ and the reward rate $r$. For any client $k$, it determines his/her training accuracy level at the reward rate $r$. Next, the client collects data on demand to train the local model for attaining accuracy $a^\ast$ and sends the updated model to the server. Only those models uploaded within the time interval $[T_{\min},T_{\max}]$ will be accepted by the server, otherwise, they will be rejected. In this process, if the completion time of a model is greater than $T_{\max}$, it indicates that the local model updating may encounter some errors (i.e., network unavailable, training corrupt, data collection failed, etc.). The server will no longer receive the model. Another function of $T_{\max}$ is to control the fresh level of local models. The server will reject the local models whose completion times are greater than $T_{\max}$, deeming them outdated. If the completion time of a model is less than $T_{\min}$, it indicates that the client may not take the task seriously. The server also rejects it.  Finally, the server aggregates the received local models $\{\theta_k\}_{k=1}^n,T_k\in[T_{\min},T_{\max}]$ to obtain a global model and then distributes the rewards to clients whose models are successfully accepted according to the accuracy levels that they archived. 
+Figure~\ref{fig:framework} shows the framework of the proposed TiFedCrowd model. The data requester first publishes task requirements and the allowed maximum completion time $T_{\max}$ through a crowdsourcing platform. Then, the platform (server) calculates the allowed minimum completion time $T_{\min}$ by evaluating task difficulty level and network quality and announces it to all clients along with the to-be-trained model $\theta$ and the reward rate $r$. For any client $k$, it determines his/her training accuracy level at the reward rate $r$. Next, the client collects data on demand to train the local model for attaining accuracy $a_k^\ast$ and sends the updated model to the server. Only those models uploaded within the time interval $[T_{\min},T_{\max}]$ will be accepted by the server, otherwise, they will be rejected. In this process, if the completion time of a model is greater than $T_{\max}$, it indicates that the local model updating may encounter some errors (i.e., network unavailable, training corrupt, data collection failed, etc.). The server will no longer receive the model. Another function of $T_{\max}$ is to control the fresh level of local models. The server will reject the local models whose completion times are greater than $T_{\max}$, deeming them outdated. If the completion time of a model is less than $T_{\min}$, it indicates that the client may not take the task seriously. The server also rejects it.  Finally, the server aggregates the received local models $\{\theta_k\}_{k=1}^n,T_k\in[T_{\min},T_{\max}]$ to obtain a global model and then distributes the rewards to clients whose models are successfully accepted according to the accuracy levels that they archived. 
 
 The proposed TiFedCrowd aims to achieve a win-win situation using a novel incentive mechanism. Ideally, the server-side tries to encourage clients to contribute high-quality local models using as less as budget. whereas, the clients try to obtain more rewards by providing qualified outcomes within the specified time interval. Clearly, it is a gaming process. In the following sections, we will show that TiFedCrowd can reach an equilibrium status, where the utilities of both server and clients can be optimal. We will also show that introducing the time interval $[T_{\min}, T_{\max}]$ not only brings practical values (controlling the fresh levels of local models and filtering out low-quality local models) but also theoretically improves the utility of the server and the performance of the global model.
 
@@ -162,14 +162,17 @@ To find the equilibrium of the client stage in the game, we take the first deriv
 \begin{equation}
 	\frac{\partial u_k(r,a_k)}{\partial a_k} = r-\frac{\gamma_k}{1-a_k}.
 \end{equation}	
+
 Let $\frac{\partial u_k(r,a_k)}{\partial a_k} = 0$, we have
 \begin{equation}\label{eq:a_k_ast}
 	a_k^\ast = 1 - \frac{\gamma_k}{r}.
 \end{equation}	
+
 Then, we take the second derivative of $u_k(r,a_k)$ with respect to $a_k$ as follows:
 \begin{equation}
 	\frac{\partial^2 u_k(r,a_k)}{\partial a_k^2} = - \frac{\gamma_k}{(1-a_k)^2} < 0.
 \end{equation}	
+
 Hence, we derive and prove that $a_k^\ast = 1 - \frac{\gamma_k}{r}$ is the global optimal response accuracy of the client and is unique.
 
 Since we have $0<a_k^\ast<1$, we can derive the value range of the reward rate $r$ as follows:
@@ -177,6 +180,7 @@ Since we have $0<a_k^\ast<1$, we can derive the value range of the reward rate $
 	0 < a_k^\ast = 1 - \frac{\gamma_k}{r} < 1\quad
 	\Leftrightarrow\quad r > \gamma_k.
 \end{equation}	
+
 Based on the above derivations for clients (followers), as the leader in the game, the server can deduce the unique Nash equilibrium among valid participants for any reward rate $r>\gamma_k$. Accordingly, the server can choose the optimal reward rate $r^\ast$ to maximize its net utility. Based upon the sets of the completion time $\bm{T}^\ast$ and the optimum response accuracy $\bm{a}^\ast$, utility of the server is defined as follows:
 \begin{equation}\label{eq:opt_u}
 	U(r,\bm{a}^\ast) = \frac{1}{\zeta}\cdot \sum_{k=1}^n(\alpha\cdot a_k^\ast\cdot \mathbb{I}(\tau)) + \beta\cdot(T_{\max}-\max_{\mathbb{I}(\tau)=1,1\le k\le n}T_k^\ast) - \sum_{k=1}^n(r\cdot a_k^\ast\cdot \mathbb{I}(\tau)).
@@ -189,15 +193,18 @@ Taking the first derivative of $U(r,\bm{a}^\ast)$ with respect to $r$, we obtain
 		&= \frac{\alpha}{\zeta\cdot r^2}\cdot\sum_{k=1}^n(\gamma_k\cdot\mathbb{I}(\tau))-\zeta.
 	\end{aligned}
 \end{equation}
+
 Let $\frac{\partial U(r,\bm{a}^\ast)}{\partial r} = 0$, we have
 \begin{equation}\label{eq:opt_r}
-	r^\ast =\frac{1}{\zeta}\cdot\sqrt{\sum_{k=1}^n(\gamma_k\cdot\mathbb{I}(\tau))}.
+	r^\ast =\frac{1}{\zeta}\cdot\sqrt{\alpha\cdot\sum_{k=1}^n(\gamma_k\cdot\mathbb{I}(\tau))}.
 \end{equation}	
-The second derivative of $u_k(r,a_k)$ with respect to $a_k$ is as follows
+
+The second derivative of $u_k(r,a_k)$ with respect to $r$ is as follows
 \begin{equation}
 	\frac{\partial^2 U(r,\bm{a}^\ast)}{\partial r^2} = - \frac{2\cdot\alpha}{\zeta\cdot r^3}\cdot\sum_{k=1}^n(\gamma_k\cdot\mathbb{I}(\tau)) < 0.
 \end{equation}	
-Therefore, we have proved that $r^\ast = \frac{1}{\zeta}\cdot\sqrt{\sum_{k=1}^n(\gamma_k\cdot\mathbb{I}(\tau))}$ is the global optimal reward rate and it is unique. 
+
+Therefore, we have proved that $r^\ast = \frac{1}{\zeta}\cdot\sqrt{\alpha\cdot\sum_{k=1}^n(\gamma_k\cdot\mathbb{I}(\tau))}$ is the global optimal reward rate and it is unique. 
 
 To sum up, we have found the unique Nash equilibrium of the proposed incentive mechanism under federated crowdsourcing.
 
@@ -214,10 +221,11 @@ To compare the magnitude of $\bar{U}$ and $U$, we take the difference between $\
 \begin{equation}
 	\bar{U} -U = \frac{1}{n}\cdot \sum_{k=1}^n(\alpha\cdot a_k)-\frac{1}{\zeta}\cdot \sum_{k=1}^n(\alpha\cdot a_k\cdot \mathbb{I}(\tau))- \beta\cdot(T_{\max}-\max_{\mathbb{I}(\tau)=1,1\le k\le n}T_k) - \sum_{k=1}^n(r\cdot a_k\cdot (1-\mathbb{I}(\tau))).
 \end{equation}
+
 For those data/models submitted after the deadline $T_{\max}$, whose freshness does not meet the requirements of the requester, we consider the accuracy level of their contributions to be $0$. Since TiFedCrowd uses the time control mechanism to filter out low-quality data/models, we have the following results:
 \begin{equation}
 	\begin{aligned}
-		\frac{1}{n}\cdot \sum_{k=1}^n\cdot a_k < \frac{1}{\zeta}\cdot \sum_{k=1}^n\cdot a_k\cdot \mathbb{I}(\tau)\quad
+		\frac{1}{n}\cdot \sum_{k=1}^n a_k < \frac{1}{\zeta}\cdot \sum_{k=1}^n a_k\cdot \mathbb{I}(\tau)\quad
 		&\Leftrightarrow\quad \frac{1}{n}\cdot \sum_{k=1}^n(\alpha\cdot a_k)-\frac{1}{\zeta}\cdot \sum_{k=1}^n(\alpha\cdot a_k\cdot \mathbb{I}(\tau))<0\\&\Leftrightarrow\quad  \bar{U} -U<0\quad\Leftrightarrow\quad  \bar{U} < U.
 	\end{aligned}
 \end{equation}	
@@ -237,7 +245,7 @@ The process of the client side includes the following three steps: 1) receive th
 		parameters $\{\gamma_k\}_{k=1}^n$; size of the published model $\xi$;  system parameters $\alpha$ and $\beta$; completion deadline $T_{\max}$.
 		\ENSURE global learning model $\Theta$.\\
 		\COMMENT{\textit{Procedure at the server}}
-		\STATE Sever initializes...
+		\STATE Sever initializes the system parameters $\alpha$ and $\beta$ by the task type.
 		\STATE Estimate the minimum completion time $T_{\min}$.
 		\FOR{all clients $k = 1 \to n$ in parallel}
 		\IF {completion time $T_k\in[T_{\min},T_{\max}]$}
@@ -251,7 +259,8 @@ The process of the client side includes the following three steps: 1) receive th
 		\STATE Receive the updated models $\{\theta_k\}_{k=1}^n$ and send the rewards to valid participants based on their accuracy levels. Aggregate the global model $\Theta$.
 		\RETURN the global model $\Theta$.\\
 		\COMMENT{\textit{Procedure at client $k$}}
-		\STATE Client initializes...
+		\STATE Client initializes the computation
+		parameter $\gamma_k$ according to the data size and condition number of the local subproblem.
 		\STATE Receive the time interval $[T_{\min},T_{\max}]$ and the reward rate $r$.
 		\STATE Compute the client utility $u_k$ via Eq. (\ref{eq:client-u}).
 		\STATE Determine the training accuracy $a_k^\ast$ to solve the local subproblem via Eq. (\ref{eq:a_k_ast}).
@@ -261,6 +270,81 @@ The process of the client side includes the following three steps: 1) receive th
 \end{algorithm}
 
 The time complexity analysis of this algorithm needs to be discussed from the client side and the server side respectively. On the client side, the main time consumption of the algorithm is data collection and model training. The data collection time complexity is $O(m)$, where $m$ is the number of tasks collected by the client. The model training time complexity is $O(\log(a_k^{-1}))$, related to training the local model for attaining the accuracy $a_k$. Hence, the total time complexity of TiFedCrowd on the client side is $S[O(m)+O(\log(a_k^{-1}))]$. The space complexity is $O(\xi)$, where $\xi$ is the size of model parameters. On the server side, the main time consumption is to interact with the $n$ clients and the main space consumption is to aggregate the $n$ client models. Therefore, the time complexity of TiFedCrowd on the server side is $O(n)$ and the space complexity is $O(n\cdot\xi)$.
+
+\section{TiFedCrowd at Multiple Heterogeneous Federated Crowdsourcing Tasks}
+In this section, we discuss how TiFedCrowd works in the case of heterogeneous federated crowdsourced tasks. Specifically, this is the extension of TiFedCrowd to publish multiple federated crowdsourced tasks simultaneously. 
+\subsection{Problem Settings}
+Let $\{\Omega_i\}_{i=1}^s$ be a heterogeneous set of federated crowdsourcing tasks and $s$ indicates the number of types of tasks. The data requester first publishes task requirements and the uniform allowed maximum completion time $T_{\max}$. Let $\{\bm{\mathcal{N}}_i\}_{i=1}^s$ be $s$ groups of workers participating in the tasks and $\bm{\mathcal{N}}_i = \{1_i,2_i,\dots,n_i\}$ ($n_i$ is the number of workers involved in task $\Omega_i$.). The server calculates the minimum completion time $\{T_{\min}^i\}_{i=1}^s$ by evaluating the difficulty of the different types of tasks and combining the network quality and announces them to all clients along with the to-be-trained model $\{\theta^i\}_{i=1}^s$ and the reward rates $\{r_i\}_{i=1}^s$. The reward rate $r_i$ is proportional to the difficulty level of the task $\Omega_i$ to prevents clients from selecting only simple tasks and let $\{\xi_i\}_{i=1}^s$ be the size of the parameters of these models. 
+\subsection{The Two-Stage Stackelberg Game}
+The clients stage: A client $k_i\in\bm{\mathcal{N}}_i\subseteq\{\bm{\mathcal{N}}_i\}_{i=1}^s$ tries to collect data on demand to train the local model for attaining accuracy ${a_k^i}^\ast$ and sends the updated model $\theta_k^i$ to the server within the time interval $[T_{\min}^i,T_{\max}]$ to collaboratively train the shared model $\Theta$. Therefore, for a valid participant whose completion time $T_k^i$ meets condition $\tau^i:T_k^i\in[T_{\min}^i,T_{\max}]$, we define the utility of a client as follows:
+\begin{equation}
+	u_k^i = r_i\cdot a_k^i - c_k^i, \quad only\,\: if\quad\mathbb{I}(\tau^i) = 1.
+\end{equation}
+Here $c_k^i$ is the total cost of client $k_i$'s participation:
+\begin{equation}
+	c_k^i = \gamma_k^i\cdot \log(\frac{1}{1-a_k^i})+\lambda\cdot\xi_i,
+\end{equation}
+where $\gamma_k^i\cdot \log(\frac{1}{1-a_k^i})$ is the computation cost and $\lambda\cdot\xi_i$ is the communication cost.
+
+The server stage: The utility of the server in TiFedCrowd at heterogeneous tasks is defined as follows:
+\begin{equation}
+	\mathcal{U} = \frac{1}{\zeta}\cdot \sum_{i=1}^{s}\sum_{k=1}^{n_i}\left(\alpha_i\cdot a_k^i\cdot \mathbb{I}(\tau^i)\right) + \beta\cdot(T_{\max}-\max_{\mathbb{I}(\tau^i)=1,1\le k\le n_i,1\le i\le s}T_k^i) - \sum_{i=1}^{s}\sum_{k=1}^{n_i}\left(r_i\cdot a_k^i\cdot \mathbb{I}(\tau^i)\right),
+\end{equation}
+where the system parameters $\{\alpha_i\}_{i=1}^s$ ($\alpha_i>0$) can also represent the weight of heterogeneous tasks and $\sum_{i=1}^{s}\sum_{k=1}^{n_i}\left(r_i\cdot a_k^i\cdot \mathbb{I}(\tau^i)\right)$ is the cost totally spent for incentivizing clients that have validly participated in federated crowdsourcing. In addition, the number of valid participants $\zeta$ is calculated as: 
+\begin{equation}
+	\zeta = \sum_{i=1}^{s}\sum_{k=1}^{n_i}\mathbb{I}(\tau^i).
+\end{equation}
+\subsection{Nash Equibibrium for Heterogeneous Tasks in TiFedCrowd}
+\begin{myDef}
+	Nash Equilibrium for Heterogeneous Tasks. For any values of $\bm{r}$ and $\bm{a}$, $(\bm{r}^\ast,\bm{a}^\ast)$ is a Nash equilibrium for Heterogeneous Tasks if they satisfy the following conditions:
+	\begin{equation}
+		\mathcal{U}(\bm{r}^\ast,\bm{a}^\ast) \ge \mathcal{U}(\bm{r},\bm{a}^\ast),
+	\end{equation}	
+	\begin{equation}
+		u_k^i(r_i^\ast,{a_k^i}^\ast) \ge u_k^i(r_i^\ast,a_k^i),\, \forall k_i\in\bm{\mathcal{N}}_i\subseteq\{\bm{\mathcal{N}}_i\}_{i=1}^s.
+	\end{equation}	
+\end{myDef}
+
+To find the equilibrium at heterogeneous tasks of the client stage in the game, let the first derivative of $u_k^i(r_i,a_k^i)$ with respect to $a_k^i$ be $0$, we have:
+\begin{equation}
+	\frac{\partial u_k^i(r_i,a_k^i)}{\partial a_k^i} = r_i-\frac{\gamma_k^i}{1-a_k^i} = 0 \quad
+	\Leftrightarrow\quad {a_k^i}^\ast = 1 - \frac{\gamma_k^i}{r_i}.
+\end{equation}	
+
+Since the second derivative of $u_k^i(r_i,a_k^i)$ with respect to $a_k^i$:
+\begin{equation}
+	\frac{\partial^2 u_k^i(r_i,a_k^i)}{\partial {a_k^i}^2} = - \frac{\gamma_k^i}{(1-a_k^i)^2} < 0.
+\end{equation}	
+${a_k^i}^\ast = 1 - \frac{\gamma_k^i}{r_i}$ is the global optimal response accuracy of the client and is unique.
+
+According to $0<{a_k^i}^\ast<1$, the value range of the reward rate $r_i$ is derived as follows:
+\begin{equation}
+	0 < {a_k^i}^\ast = 1 - \frac{\gamma_k^i}{r_i} < 1\quad
+	\Leftrightarrow\quad r_i > \gamma_k^i, \quad i=1,2,\dots,s.
+\end{equation}	
+
+Based on the sets of the completion time $\bm{T}^\ast$ and the optimum response accuracy $\bm{a}^\ast$, utility of the server at heterogeneous tasks can be defined as follows:
+\begin{equation}
+	\mathcal{U}(\bm{r},\bm{a}^\ast) = \frac{1}{\zeta}\cdot \sum_{i=1}^{s}\sum_{k=1}^{n_i}\left(\alpha_i\cdot {a_k^i}^\ast\cdot \mathbb{I}(\tau^i)\right) + \beta\cdot(T_{\max}-\max_{\mathbb{I}(\tau^i)=1,1\le k\le n_i,1\le i\le s}{T_k^i}^\ast) - \sum_{i=1}^{s}\sum_{k=1}^{n_i}\left(r_i\cdot {a_k^i}^\ast\cdot \mathbb{I}(\tau^i)\right).
+\end{equation}
+
+Then let the first derivative of $U(\bm{r},\bm{a}^\ast)$ with respect to $\bm{r}$ be $0$, we obtain
+\begin{equation}
+	\begin{aligned}
+		\frac{\partial \mathcal{U}(\bm{r},\bm{a}^\ast)}{\partial r_i} &= \frac{1}{\zeta}\cdot \sum_{k=1}^{n_i}(\alpha_i\cdot \frac{\partial {a_k^i}^\ast}{\partial r_i}\cdot \mathbb{I}(\tau^i)) - \sum_{k=1}^{n_i}(r_i\cdot \frac{\partial {a_k^i}^\ast}{\partial r_i}\ast\cdot \mathbb{I}(\tau^i)) - \sum_{k=1}^{n_i}({a_k^i}^\ast\cdot \mathbb{I}(\tau^i))\\
+		&= \frac{\alpha_i}{\zeta\cdot {r_i}^2}\cdot\sum_{k=1}^{n_i}(\gamma_k^i\cdot\mathbb{I}(\tau^i))-\zeta = 0\\
+		&\Leftrightarrow\quad r_i^\ast =\frac{1}{\zeta}\cdot\sqrt{\alpha_i\cdot\sum_{k=1}^{n_i}(\gamma_k^i\cdot\mathbb{I}(\tau^i))}, \quad i=1,2,\dots,s.
+	\end{aligned}
+\end{equation}
+
+Taking the second derivative of $U(\bm{r},\bm{a}^\ast)$ with respect to $\bm{r}$, we have
+\begin{equation}
+	\frac{\partial^2 \mathcal{U}(\bm{r},\bm{a}^\ast)}{\partial {r_i}^2} = - \frac{2\cdot\alpha_i}{\zeta\cdot {r_i}^3}\cdot\sum_{k=1}^{n_i}(\gamma_k^i\cdot\mathbb{I}(\tau^i)) < 0.
+\end{equation}	
+
+Hence, $r_i^\ast =\frac{1}{\zeta}\cdot\sqrt{\alpha_i\cdot\sum_{k=1}^{n_i}(\gamma_k^i\cdot\mathbb{I}(\tau^i))}$ ($i=1,2,\dots,s$) are the global optimal reward rates and they are unique. 
+
+According to the above, the Nash Equibibrium for Heterogeneous Tasks in TiFedCrowd has been found.
 
 \section{Experiments} \label{sec:exp}
 Experiments go here...
