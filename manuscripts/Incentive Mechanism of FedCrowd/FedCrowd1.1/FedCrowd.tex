@@ -274,7 +274,7 @@ The time complexity analysis of this algorithm needs to be discussed from the cl
 \section{TiFedCrowd at Multiple Heterogeneous Federated Crowdsourcing Tasks}
 In this section, we discuss how TiFedCrowd works in the case of heterogeneous federated crowdsourced tasks. Specifically, this is the extension of TiFedCrowd to publish multiple federated crowdsourced tasks simultaneously. 
 \subsection{Problem Settings}
-Let $\{\Omega_i\}_{i=1}^s$ be a heterogeneous set of federated crowdsourcing tasks and $s$ indicates the number of types of tasks. The data requester first publishes task requirements and the uniform allowed maximum completion time $T_{\max}$. Let $\{\bm{\mathcal{N}}_i\}_{i=1}^s$ be $s$ groups of workers participating in the tasks and $\bm{\mathcal{N}}_i = \{1_i,2_i,\dots,n_i\}$ ($n_i$ is the number of workers involved in task $\Omega_i$.). The server calculates the minimum completion time $\{T_{\min}^i\}_{i=1}^s$ by evaluating the difficulty of the different types of tasks and combining the network quality and announces them to all clients along with the to-be-trained model $\{\theta^i\}_{i=1}^s$ and the reward rates $\{r_i\}_{i=1}^s$. The reward rate $r_i$ is proportional to the difficulty level of the task $\Omega_i$ to prevents clients from selecting only simple tasks and let $\{\xi_i\}_{i=1}^s$ be the size of the parameters of these models. 
+Let $\{\Omega_i\}_{i=1}^s$ be a heterogeneous set of federated crowdsourcing tasks and $s$ indicates the number of types of tasks. The data requester first publishes task requirements and the uniform allowed maximum completion time $T_{\max}$. Let $\{\bm{\mathcal{N}}_i\}_{i=1}^s$ be $s$ groups of workers participating in the tasks and $\bm{\mathcal{N}}_i = \{1_i,2_i,\dots,n_i\}$ ($n_i$ is the number of workers involved in task $\Omega_i$.). The server calculates the minimum completion time $\{T_{\min}^i\}_{i=1}^s$ by evaluating the difficulty of the different types of tasks and combining the network quality and then announces them to all clients along with the to-be-trained model $\{\theta^i\}_{i=1}^s$ and the reward rates $\{r_i\}_{i=1}^s$. The reward rate $r_i$ varies by the type of task $\Omega_i$ to prevent clients from selecting only simple tasks and let $\{\xi_i\}_{i=1}^s$ be the size of the parameters of these models. 
 \subsection{The Two-Stage Stackelberg Game}
 The clients stage: A client $k_i\in\bm{\mathcal{N}}_i\subseteq\{\bm{\mathcal{N}}_i\}_{i=1}^s$ tries to collect data on demand to train the local model for attaining accuracy ${a_k^i}^\ast$ and sends the updated model $\theta_k^i$ to the server within the time interval $[T_{\min}^i,T_{\max}]$ to collaboratively train the shared model $\Theta$. Therefore, for a valid participant whose completion time $T_k^i$ meets condition $\tau^i:T_k^i\in[T_{\min}^i,T_{\max}]$, we define the utility of a client as follows:
 \begin{equation}
@@ -294,7 +294,7 @@ where the system parameters $\{\alpha_i\}_{i=1}^s$ ($\alpha_i>0$) can also repre
 \begin{equation}
 	\zeta = \sum_{i=1}^{s}\sum_{k=1}^{n_i}\mathbb{I}(\tau^i).
 \end{equation}
-\subsection{Nash Equibibrium for Heterogeneous Tasks in TiFedCrowd}
+\subsection{Nash Equilibrium for Heterogeneous Tasks in TiFedCrowd}
 \begin{myDef}
 	Nash Equilibrium for Heterogeneous Tasks. For any values of $\bm{r}$ and $\bm{a}$, $(\bm{r}^\ast,\bm{a}^\ast)$ is a Nash equilibrium for Heterogeneous Tasks if they satisfy the following conditions:
 	\begin{equation}
@@ -323,7 +323,7 @@ According to $0<{a_k^i}^\ast<1$, the value range of the reward rate $r_i$ is der
 	\Leftrightarrow\quad r_i > \gamma_k^i, \quad i=1,2,\dots,s.
 \end{equation}	
 
-Based on the sets of the completion time $\bm{T}^\ast$ and the optimum response accuracy $\bm{a}^\ast$, utility of the server at heterogeneous tasks can be defined as follows:
+Based on the sets of the completion time $\bm{T}^\ast$ and the optimum response accuracy $\bm{a}^\ast$, the utility of the server at heterogeneous tasks can be defined as follows:
 \begin{equation}
 	\mathcal{U}(\bm{r},\bm{a}^\ast) = \frac{1}{\zeta}\cdot \sum_{i=1}^{s}\sum_{k=1}^{n_i}\left(\alpha_i\cdot {a_k^i}^\ast\cdot \mathbb{I}(\tau^i)\right) + \beta\cdot(T_{\max}-\max_{\mathbb{I}(\tau^i)=1,1\le k\le n_i,1\le i\le s}{T_k^i}^\ast) - \sum_{i=1}^{s}\sum_{k=1}^{n_i}\left(r_i\cdot {a_k^i}^\ast\cdot \mathbb{I}(\tau^i)\right).
 \end{equation}
@@ -344,7 +344,7 @@ Taking the second derivative of $U(\bm{r},\bm{a}^\ast)$ with respect to $\bm{r}$
 
 Hence, $r_i^\ast =\frac{1}{\zeta}\cdot\sqrt{\alpha_i\cdot\sum_{k=1}^{n_i}(\gamma_k^i\cdot\mathbb{I}(\tau^i))}$ ($i=1,2,\dots,s$) are the global optimal reward rates and they are unique. 
 
-According to the above, the Nash Equibibrium for Heterogeneous Tasks in TiFedCrowd has been found.
+According to the above, the Nash Equilibrium for Heterogeneous Tasks in TiFedCrowd has been found.
 
 \section{Experiments} \label{sec:exp}
 Experiments go here...
