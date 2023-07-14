@@ -86,7 +86,7 @@ An incentive mechanism is necessary to ensure the quality and efficiency of FL. 
 
 Unfortunately, none of these incentive mechanisms works well in federated crowdsourcing that needs to collect data samples manually (i.e., so-call data crowdsourcing). Moreover, they all ignore the relationship between the time that workers collect data and the quality of submitted data in federated crowdsourcing and fail to respond to some delays in receiving data. The proposed TiFedCrowd in this study sets a time interval whose lower bound preliminarily screens the quality of submitted data and whose upper bound enables the task publisher to specify the fresh level of the data. Furthermore, the contribution of a worker is measured according to the accuracy \footnote{In this study, we simply use accuracy to measure the performance of learning models.} with which the client completes a local training model within the given time, and the rewards are fairly allocated in an economical manner, so as to motivate more workers to complete crowdsourcing tasks with high quality and efficiency.
 
-\section{Methodology} \label{sec:mtd}
+\section{The Proposed TiFedCrowd Incentive Method} \label{sec:mtd}
 In this section, we first present the federated crowdsourcing problem settings. Then, we present the proposed incentive mechanism as a two-stage Stackelberg game and also derive its equilibrium. Next, we summarize the whole process as an algorithm. Finally, we prove that time control is necessary for federated crowdsourcing.
 
 \begin{figure}
@@ -270,32 +270,37 @@ The process of the client side includes the following three steps: 1) receive th
 
 The time complexity analysis of this algorithm needs to be discussed from the client side and the server side respectively. On the client side, the main time consumption of the algorithm is data collection and model training. The data collection time complexity is $O(m)$, where $m$ is the number of tasks collected by the client. The model training time complexity is $O(\log(a_k^{-1}))$, related to training the local model for attaining the accuracy $a_k$. Hence, the total time complexity of TiFedCrowd on the client side is $S[O(m)+O(\log(a_k^{-1}))]$. The space complexity is $O(\xi)$, where $\xi$ is the size of model parameters. On the server side, the main time consumption is to interact with the $n$ clients and the main space consumption is to aggregate the $n$ client models. Therefore, the time complexity of TiFedCrowd on the server side is $O(n)$ and the space complexity is $O(n\cdot\xi)$.
 
-\section{TiFedCrowd at Multiple Heterogeneous Federated Crowdsourcing Tasks}
-In this section, we discuss how TiFedCrowd works in the case of heterogeneous federated crowdsourced tasks. Specifically, this is the extension of TiFedCrowd to publish multiple federated crowdsourced tasks simultaneously. 
-\subsection{Problem Settings}
-Let $\{\Omega^{(i)}\}_{i=1}^s$ be a heterogeneous set of federated crowdsourcing tasks and $s$ indicates the number of types of tasks. The data requester first publishes task requirements and the uniform allowed maximum completion time $T_{\max}$. Let $\{\bm{\mathcal{N}}^{(i)}\}_{i=1}^s$ be $s$ groups of workers participating in the tasks and $\bm{\mathcal{N}}^{(i)} = \{1^{(i)},2^{(i)},\dots,n^{(i)}\}$ ($n^{(i)}$ is the number of workers involved in task $\Omega^{(i)}$.). The server calculates the minimum completion time $\{T_{\min}^{(i)}\}_{i=1}^s$ by evaluating the difficulty of the different types of tasks and combining the network quality and then announces them to all clients along with the to-be-trained model $\{\theta^{(i)}\}_{i=1}^s$ and the reward rates $\{r^{(i)}\}_{i=1}^s$. The reward rate $r^{(i)}$ varies by the type of task $\Omega^{(i)}$ to prevent clients from selecting only simple tasks and let $\{\xi^{(i)}\}_{i=1}^s$ be the size of the parameters of these models. 
-\subsection{The Two-Stage Stackelberg Game}
-The clients stage: A client $k^{(i)}\in\bm{\mathcal{N}}^{(i)}\subseteq\{\bm{\mathcal{N}}^{(i)}\}_{i=1}^s$ tries to collect data on demand to train the local model for attaining accuracy ${a_k^{(i)}}^\ast$ and sends the updated model $\theta_k^{(i)}$ to the server within the time interval $[T_{\min}^{(i)},T_{\max}]$ to collaboratively train the shared model $\Theta$. Therefore, for a valid participant whose completion time $T_k^{(i)}$ meets condition $\tau^{(i)}:T_k^{(i)}\in[T_{\min}^{(i)},T_{\max}]$, we define the utility of a client as follows:
+\section{TiFedCrowd for Multiple Heterogeneous Federated Crowdsourcing Tasks}
+In this section, we will show that TiFedCrowd can be easily extended to Multiple Heterogeneous Federated Crowdsourcing (MHFC) tasks. We first present the problem settings of MHFC tasks. Then, we model TiFedCrowd for MHFC as a two-stage Stackelberg game. Finally, we derive the Nash equilibrium for the model.
+
+\subsection{Problem Settings of MHFC Tasks}
+In Section~\ref{sec:mtd}, we have an underlying assumption that the requester has divided the task into subtasks with equal (or approximately equal) completion costs. This setting is a better choice in most federated crowdsourcing applications because it has a simple protocol for quality control and reward distribution. However, there are still some crowdsourcing tasks in reality, and it is difficult for them to be evenly divided. For example, some classification tasks may have a very imbalanced distribution of underlying classes. Then, for workers participating in federated crowdsourcing tasks, it is difficult for them to collect samples with a similar distribution. That is, some workers may spend a lot of effort collecting samples in rare categories, while others collect those in majority categories with ease. Therefore, the costs of workers collecting data, training models, and submitting models vary significantly. We call this scenario as the multiple heterogeneous federated crowdsourcing.
+
+Let $\{\Omega^{(i)}\}_{i=1}^s$ be a set of heterogeneous federated crowdsourcing tasks, where $s$ is the number of types of tasks. Tasks of the same type have approximately the same cost. The requester first publishes task requirements and an allowed maximum completion time $T_{\max}$ for all types of tasks. Here, we set the only $T_{\max}$ because the requester usually publishes a unique deadline for all submissions. Let $\{\bm{\mathcal{N}}^{(i)}\}_{i=1}^s$ be $s$ groups of workers participating in the tasks. Workers in group $i$ (for the tasks with type $i$) are $\bm{\mathcal{N}}^{(i)} = \{1^{(i)},2^{(i)},\dots,n^{(i)}\}$, whose elements are serial numbers for the workers. That is, $n^{(i)}$ happens to be the number of workers involved in tasks $\Omega^{(i)}$. The server calculates the minimum completion times $\{T_{\min}^{(i)}\}_{i=1}^s$ for all types of tasks by jointly evaluating the difficulties of different types of tasks and the network qualities. Then, the server announces them to all clients along with the to-be-trained models $\{\theta^{(i)}\}_{i=1}^s$ and the reward rates $\{r^{(i)}\}_{i=1}^s$. The reward rate $r^{(i)}$ varies by the type of tasks $\Omega^{(i)}$, which can prevent clients from selecting only simple tasks. Finally, let $\{\xi^{(i)}\}_{i=1}^s$ be the sizes of the parameters of these types of learning models.
+
+\subsection{The Two-Stage Stackelberg Game for MHFC}
+\textbf{Stage \uppercase\expandafter{\romannumeral2} (Clients):} A client $k^{(i)}\in\bm{\mathcal{N}}^{(i)}\subseteq\{\bm{\mathcal{N}}^{(i)}\}_{i=1}^s$ tries to collect data on demand to train the local model for attaining accuracy ${a_k^{(i)}}^\ast$ and sends the updated model $\theta_k^{(i)}$ to the server within the time interval $[T_{\min}^{(i)},T_{\max}]$ to collaboratively train the shared model $\Theta$. Therefore, for a valid participant whose completion time $T_k^{(i)}$ meets condition $\tau^{(i)}:T_k^{(i)}\in[T_{\min}^{(i)},T_{\max}]$, we define the utility of client $k^{(i)}$ in task type $i$ as follows:
 \begin{equation}
 	u_k^{(i)} = r^{(i)}\cdot a_k^{(i)} - c_k^{(i)}, \quad only\,\: if\quad\mathbb{I}(\tau^{(i)}) = 1.
 \end{equation}
-Here $c_k^{(i)}$ is the total cost of client $k^{(i)}$'s participation:
+Here, $c_k^{(i)}$ is the total cost of the participation of client $k^{(i)}$:
 \begin{equation}
 	c_k^{(i)} = \gamma_k^{(i)}\cdot \log(\frac{1}{1-a_k^{(i)}})+\lambda\cdot\xi^{(i)},
 \end{equation}
 where $\gamma_k^{(i)}\cdot \log(\frac{1}{1-a_k^{(i)}})$ is the computation cost and $\lambda\cdot\xi^{(i)}$ is the communication cost.
 
-The server stage: The utility of the server in TiFedCrowd at heterogeneous tasks is defined as follows:
+\textbf{Stage \uppercase\expandafter{\romannumeral1} (Server):} The utility of the server in TiFedCrowd for MHFC tasks can be defined as follows:
 \begin{equation}
 	\mathcal{U} = \frac{1}{\zeta}\cdot \sum_{i=1}^{s}\sum_{k=1}^{n^{(i)}}\left(\alpha^{(i)}\cdot a_k^{(i)}\cdot \mathbb{I}(\tau^{(i)})\right) + \beta\cdot(T_{\max}-\max_{\mathbb{I}(\tau^{(i)})=1,1\le k\le n^{(i)},1\le i\le s}T_k^{(i)}) - \sum_{i=1}^{s}\sum_{k=1}^{n^{(i)}}\left(r^{(i)}\cdot a_k^{(i)}\cdot \mathbb{I}(\tau^{(i)})\right),
 \end{equation}
-where the system parameters $\{\alpha^{(i)}\}_{i=1}^s$ ($\alpha^{(i)}>0$) can also represent the weight of heterogeneous tasks and $\sum_{i=1}^{s}\sum_{k=1}^{n^{(i)}}\left(r^{(i)}\cdot a_k^{(i)}\cdot \mathbb{I}(\tau^{(i)})\right)$ is the cost totally spent for incentivizing clients that have validly participated in federated crowdsourcing. In addition, the number of valid participants $\zeta$ is calculated as: 
+where the system parameters $\{\alpha^{(i)}\}_{i=1}^s$ ($\alpha^{(i)}>0$) also can  represent the weights of multiple heterogeneous tasks and $\sum_{i=1}^{s}\sum_{k=1}^{n^{(i)}}\left(r^{(i)}\cdot a_k^{(i)}\cdot \mathbb{I}(\tau^{(i)})\right)$ is the total cost for incentivizing clients that have validly participated in federated crowdsourcing. In addition, the number of valid participants $\zeta$ is calculated as follows:
 \begin{equation}
 	\zeta = \sum_{i=1}^{s}\sum_{k=1}^{n^{(i)}}\mathbb{I}(\tau^{(i)}).
 \end{equation}
-\subsection{Nash Equilibrium for Heterogeneous Tasks in TiFedCrowd}
+
+\subsection{Nash Equilibrium for MHFC in TiFedCrowd}
 \begin{myDef}
-	Nash Equilibrium for Heterogeneous Tasks. For any values of $\bm{r}$ and $\bm{a}$, $(\bm{r}^\ast,\bm{a}^\ast)$ is a Nash equilibrium for Heterogeneous Tasks if they satisfy the following conditions:
+	Nash Equilibrium for MHFC Tasks. For any values of $\bm{r}$ and $\bm{a}$, $(\bm{r}^\ast,\bm{a}^\ast)$ is a Nash equilibrium for MHFC tasks if they satisfy the following conditions:
 	\begin{equation}
 		\mathcal{U}(\bm{r}^\ast,\bm{a}^\ast) \ge \mathcal{U}(\bm{r},\bm{a}^\ast),
 	\end{equation}	
@@ -304,17 +309,16 @@ where the system parameters $\{\alpha^{(i)}\}_{i=1}^s$ ($\alpha^{(i)}>0$) can al
 	\end{equation}	
 \end{myDef}
 
-To find the equilibrium at heterogeneous tasks of the client stage in the game, let the first derivative of $u_k^{(i)}(r^{(i)},a_k^{(i)})$ with respect to $a_k^{(i)}$ be $0$, we have:
+To find the equilibrium for MHFC tasks of the client stage in the game, let the first derivative of $u_k^{(i)}(r^{(i)},a_k^{(i)})$ with respect to $a_k^{(i)}$ be $0$, we have:
 \begin{equation}
 	\frac{\partial u_k^{(i)}(r^{(i)},a_k^{(i)})}{\partial a_k^{(i)}} = r^{(i)}-\frac{\gamma_k^{(i)}}{1-a_k^{(i)}} = 0 \quad
 	\Leftrightarrow\quad {a_k^{(i)}}^\ast = 1 - \frac{\gamma_k^{(i)}}{r^{(i)}}.
 \end{equation}	
-
-Since the second derivative of $u_k^{(i)}(r^{(i)},a_k^{(i)})$ with respect to $a_k^{(i)}$:
+Since the second derivative of $u_k^{(i)}(r^{(i)},a_k^{(i)})$ with respect to $a_k^{(i)}$ is
 \begin{equation}
-	\frac{\partial^2 u_k^{(i)}(r^{(i)},a_k^{(i)})}{\partial {a_k^{(i)}}^2} = - \frac{\gamma_k^{(i)}}{(1-a_k^{(i)})^2} < 0.
+	\frac{\partial^2 u_k^{(i)}(r^{(i)},a_k^{(i)})}{\partial {a_k^{(i)}}^2} = - \frac{\gamma_k^{(i)}}{(1-a_k^{(i)})^2} < 0,
 \end{equation}	
-${a_k^{(i)}}^\ast = 1 - \frac{\gamma_k^{(i)}}{r^{(i)}}$ is the global optimal response accuracy of the client and is unique.
+${a_k^{(i)}}^\ast = 1 - \frac{\gamma_k^{(i)}}{r^{(i)}}$ is the unique global optimal response accuracy of the client.
 
 According to $0<{a_k^{(i)}}^\ast<1$, the value range of the reward rate $r^{(i)}$ is derived as follows:
 \begin{equation}
@@ -322,12 +326,11 @@ According to $0<{a_k^{(i)}}^\ast<1$, the value range of the reward rate $r^{(i)}
 	\Leftrightarrow\quad r^{(i)} > \gamma_k^{(i)}, \quad i=1,2,\dots,s.
 \end{equation}	
 
-Based on the sets of the completion time $\bm{T}^\ast$ and the optimum response accuracy $\bm{a}^\ast$, the utility of the server at heterogeneous tasks can be defined as follows:
+Based on the sets of the completion time $\bm{T}^\ast$ and the optimum response accuracy $\bm{a}^\ast$, the utility of the server for MHFC tasks can be defined as follows:
 \begin{equation}
 	\mathcal{U}(\bm{r},\bm{a}^\ast) = \frac{1}{\zeta}\cdot \sum_{i=1}^{s}\sum_{k=1}^{n^{(i)}}\left(\alpha^{(i)}\cdot {a_k^{(i)}}^\ast\cdot \mathbb{I}(\tau^{(i)})\right) + \beta\cdot(T_{\max}-\max_{\mathbb{I}(\tau^{(i)})=1,1\le k\le n^{(i)},1\le i\le s}{T_k^{(i)}}^\ast) - \sum_{i=1}^{s}\sum_{k=1}^{n^{(i)}}\left(r^{(i)}\cdot {a_k^{(i)}}^\ast\cdot \mathbb{I}(\tau^{(i)})\right).
 \end{equation}
-
-Then let the first derivative of $U(\bm{r},\bm{a}^\ast)$ with respect to $\bm{r}$ be $0$, we obtain
+Then, let the first derivative of $U(\bm{r},\bm{a}^\ast)$ with respect to $\bm{r}$ be $0$, we obtain
 \begin{equation}
 	\begin{aligned}
 		\frac{\partial \mathcal{U}(\bm{r},\bm{a}^\ast)}{\partial r^{(i)}} &= \frac{1}{\zeta}\cdot \sum_{k=1}^{n^{(i)}}\left(\alpha^{(i)}\cdot \frac{\partial {a_k^{(i)}}^\ast}{\partial r^{(i)}}\cdot \mathbb{I}(\tau^{(i)})\right) - \sum_{k=1}^{n^{(i)}}\left( r^{(i)}\cdot \frac{\partial {a_k^{(i)}}^\ast}{\partial r^{(i)}}\ast\cdot \mathbb{I}(\tau^{(i)})\right) - \sum_{k=1}^{n^{(i)}}\left({a_k^{(i)}}^\ast\cdot \mathbb{I}(\tau^{(i)})\right)\\
@@ -335,15 +338,13 @@ Then let the first derivative of $U(\bm{r},\bm{a}^\ast)$ with respect to $\bm{r}
 		&\Leftrightarrow\quad {r^{(i)}}^\ast =\frac{1}{\zeta}\cdot\sqrt{\alpha^{(i)}\cdot\sum_{k=1}^{n^{(i)}}\left(\gamma_k^{(i)}\cdot\mathbb{I}(\tau^{(i)})\right)}, \quad i=1,2,\dots,s.
 	\end{aligned}
 \end{equation}
-
 Taking the second derivative of $U(\bm{r},\bm{a}^\ast)$ with respect to $\bm{r}$, we have
 \begin{equation}
 	\frac{\partial^2 \mathcal{U}(\bm{r},\bm{a}^\ast)}{\partial {r^{(i)}}^2} = - \frac{2\cdot\alpha^{(i)}}{\zeta\cdot {r^{(i)}}^3}\cdot\sum_{k=1}^{n^{(i)}}\left(\gamma_k^{(i)}\cdot\mathbb{I}(\tau^{(i)})\right) < 0.
 \end{equation}	
+Hence, ${r^{(i)}}^\ast =\frac{1}{\zeta}\cdot\sqrt{\alpha^{(i)}\cdot\sum_{k=1}^{n^{(i)}}\left(\gamma_k^{(i)}\cdot\mathbb{I}(\tau^{(i)})\right)}$ ($i=1,2,\dots,s$) are the unique global optimal reward rates for all types of tasks.
 
-Hence, ${r^{(i)}}^\ast =\frac{1}{\zeta}\cdot\sqrt{\alpha^{(i)}\cdot\sum_{k=1}^{n^{(i)}}\left(\gamma_k^{(i)}\cdot\mathbb{I}(\tau^{(i)})\right)}$ ($i=1,2,\dots,s$) are the global optimal reward rates and they are unique. 
-
-According to the above, the Nash Equilibrium for Heterogeneous Tasks in TiFedCrowd has been found.
+We have derived the Nash equilibrium for MHFC tasks in TiFedCrowd. This is not difficult for us to write an algorithm that is similar to Algorithm~\ref{Algo1}, which can solve the incentive problem of MHFC tasks.
 
 \section{Experiments} \label{sec:exp}
 Experiments go here...
