@@ -188,9 +188,8 @@ Based on the above derivations for clients (followers), as the leader in the gam
 
 Taking the first derivative of $U(r,\bm{a}^\ast)$ with respect to $r$, we obtain
 \begin{equation}
-	\begin{aligned}
-		\frac{\partial U(r,\bm{a}^\ast)}{\partial r} &= \frac{1}{\zeta}\cdot \sum_{k=1}^n(\alpha\cdot \frac{\partial a_k^\ast}{\partial r}\cdot \mathbb{I}(\tau)) - \sum_{k=1}^n(r\cdot \frac{\partial a_k^\ast}{\partial r}\ast\cdot \mathbb{I}(\tau)) - \sum_{k=1}^n(a_k^\ast\cdot \mathbb{I}(\tau))\\
-		&= \frac{\alpha}{\zeta\cdot r^2}\cdot\sum_{k=1}^n(\gamma_k\cdot\mathbb{I}(\tau))-\zeta.
+		\begin{aligned}
+		\frac{\partial U(r,\bm{a}^\ast)}{\partial r} &= \frac{1}{\zeta}\cdot \sum_{k=1}^n\left(\alpha\cdot \frac{\partial a_k^\ast}{\partial r}\cdot \mathbb{I}(\tau)\right) - \sum_{k=1}^n\left(r\cdot \frac{\partial a_k^\ast}{\partial r}\ast\cdot \mathbb{I}(\tau)\right) - \sum_{k=1}^n(a_k^\ast\cdot \mathbb{I}(\tau))\\&= \frac{\alpha}{\zeta\cdot r^2}\cdot\sum_{k=1}^n(\gamma_k\cdot\mathbb{I}(\tau))-\zeta.
 	\end{aligned}
 \end{equation}
 
@@ -274,25 +273,25 @@ The time complexity analysis of this algorithm needs to be discussed from the cl
 \section{TiFedCrowd at Multiple Heterogeneous Federated Crowdsourcing Tasks}
 In this section, we discuss how TiFedCrowd works in the case of heterogeneous federated crowdsourced tasks. Specifically, this is the extension of TiFedCrowd to publish multiple federated crowdsourced tasks simultaneously. 
 \subsection{Problem Settings}
-Let $\{\Omega_i\}_{i=1}^s$ be a heterogeneous set of federated crowdsourcing tasks and $s$ indicates the number of types of tasks. The data requester first publishes task requirements and the uniform allowed maximum completion time $T_{\max}$. Let $\{\bm{\mathcal{N}}_i\}_{i=1}^s$ be $s$ groups of workers participating in the tasks and $\bm{\mathcal{N}}_i = \{1_i,2_i,\dots,n_i\}$ ($n_i$ is the number of workers involved in task $\Omega_i$.). The server calculates the minimum completion time $\{T_{\min}^i\}_{i=1}^s$ by evaluating the difficulty of the different types of tasks and combining the network quality and then announces them to all clients along with the to-be-trained model $\{\theta^i\}_{i=1}^s$ and the reward rates $\{r_i\}_{i=1}^s$. The reward rate $r_i$ varies by the type of task $\Omega_i$ to prevent clients from selecting only simple tasks and let $\{\xi_i\}_{i=1}^s$ be the size of the parameters of these models. 
+Let $\{\Omega^{(i)}\}_{i=1}^s$ be a heterogeneous set of federated crowdsourcing tasks and $s$ indicates the number of types of tasks. The data requester first publishes task requirements and the uniform allowed maximum completion time $T_{\max}$. Let $\{\bm{\mathcal{N}}^{(i)}\}_{i=1}^s$ be $s$ groups of workers participating in the tasks and $\bm{\mathcal{N}}^{(i)} = \{1^{(i)},2^{(i)},\dots,n^{(i)}\}$ ($n^{(i)}$ is the number of workers involved in task $\Omega^{(i)}$.). The server calculates the minimum completion time $\{T_{\min}^{(i)}\}_{i=1}^s$ by evaluating the difficulty of the different types of tasks and combining the network quality and then announces them to all clients along with the to-be-trained model $\{\theta^{(i)}\}_{i=1}^s$ and the reward rates $\{r^{(i)}\}_{i=1}^s$. The reward rate $r^{(i)}$ varies by the type of task $\Omega^{(i)}$ to prevent clients from selecting only simple tasks and let $\{\xi^{(i)}\}_{i=1}^s$ be the size of the parameters of these models. 
 \subsection{The Two-Stage Stackelberg Game}
-The clients stage: A client $k_i\in\bm{\mathcal{N}}_i\subseteq\{\bm{\mathcal{N}}_i\}_{i=1}^s$ tries to collect data on demand to train the local model for attaining accuracy ${a_k^i}^\ast$ and sends the updated model $\theta_k^i$ to the server within the time interval $[T_{\min}^i,T_{\max}]$ to collaboratively train the shared model $\Theta$. Therefore, for a valid participant whose completion time $T_k^i$ meets condition $\tau^i:T_k^i\in[T_{\min}^i,T_{\max}]$, we define the utility of a client as follows:
+The clients stage: A client $k^{(i)}\in\bm{\mathcal{N}}^{(i)}\subseteq\{\bm{\mathcal{N}}^{(i)}\}_{i=1}^s$ tries to collect data on demand to train the local model for attaining accuracy ${a_k^{(i)}}^\ast$ and sends the updated model $\theta_k^{(i)}$ to the server within the time interval $[T_{\min}^{(i)},T_{\max}]$ to collaboratively train the shared model $\Theta$. Therefore, for a valid participant whose completion time $T_k^{(i)}$ meets condition $\tau^{(i)}:T_k^{(i)}\in[T_{\min}^{(i)},T_{\max}]$, we define the utility of a client as follows:
 \begin{equation}
-	u_k^i = r_i\cdot a_k^i - c_k^i, \quad only\,\: if\quad\mathbb{I}(\tau^i) = 1.
+	u_k^{(i)} = r^{(i)}\cdot a_k^{(i)} - c_k^{(i)}, \quad only\,\: if\quad\mathbb{I}(\tau^{(i)}) = 1.
 \end{equation}
-Here $c_k^i$ is the total cost of client $k_i$'s participation:
+Here $c_k^{(i)}$ is the total cost of client $k^{(i)}$'s participation:
 \begin{equation}
-	c_k^i = \gamma_k^i\cdot \log(\frac{1}{1-a_k^i})+\lambda\cdot\xi_i,
+	c_k^{(i)} = \gamma_k^{(i)}\cdot \log(\frac{1}{1-a_k^{(i)}})+\lambda\cdot\xi^{(i)},
 \end{equation}
-where $\gamma_k^i\cdot \log(\frac{1}{1-a_k^i})$ is the computation cost and $\lambda\cdot\xi_i$ is the communication cost.
+where $\gamma_k^{(i)}\cdot \log(\frac{1}{1-a_k^{(i)}})$ is the computation cost and $\lambda\cdot\xi^{(i)}$ is the communication cost.
 
 The server stage: The utility of the server in TiFedCrowd at heterogeneous tasks is defined as follows:
 \begin{equation}
-	\mathcal{U} = \frac{1}{\zeta}\cdot \sum_{i=1}^{s}\sum_{k=1}^{n_i}\left(\alpha_i\cdot a_k^i\cdot \mathbb{I}(\tau^i)\right) + \beta\cdot(T_{\max}-\max_{\mathbb{I}(\tau^i)=1,1\le k\le n_i,1\le i\le s}T_k^i) - \sum_{i=1}^{s}\sum_{k=1}^{n_i}\left(r_i\cdot a_k^i\cdot \mathbb{I}(\tau^i)\right),
+	\mathcal{U} = \frac{1}{\zeta}\cdot \sum_{i=1}^{s}\sum_{k=1}^{n^{(i)}}\left(\alpha^{(i)}\cdot a_k^{(i)}\cdot \mathbb{I}(\tau^{(i)})\right) + \beta\cdot(T_{\max}-\max_{\mathbb{I}(\tau^{(i)})=1,1\le k\le n^{(i)},1\le i\le s}T_k^{(i)}) - \sum_{i=1}^{s}\sum_{k=1}^{n^{(i)}}\left(r^{(i)}\cdot a_k^{(i)}\cdot \mathbb{I}(\tau^{(i)})\right),
 \end{equation}
-where the system parameters $\{\alpha_i\}_{i=1}^s$ ($\alpha_i>0$) can also represent the weight of heterogeneous tasks and $\sum_{i=1}^{s}\sum_{k=1}^{n_i}\left(r_i\cdot a_k^i\cdot \mathbb{I}(\tau^i)\right)$ is the cost totally spent for incentivizing clients that have validly participated in federated crowdsourcing. In addition, the number of valid participants $\zeta$ is calculated as: 
+where the system parameters $\{\alpha^{(i)}\}_{i=1}^s$ ($\alpha^{(i)}>0$) can also represent the weight of heterogeneous tasks and $\sum_{i=1}^{s}\sum_{k=1}^{n^{(i)}}\left(r^{(i)}\cdot a_k^{(i)}\cdot \mathbb{I}(\tau^{(i)})\right)$ is the cost totally spent for incentivizing clients that have validly participated in federated crowdsourcing. In addition, the number of valid participants $\zeta$ is calculated as: 
 \begin{equation}
-	\zeta = \sum_{i=1}^{s}\sum_{k=1}^{n_i}\mathbb{I}(\tau^i).
+	\zeta = \sum_{i=1}^{s}\sum_{k=1}^{n^{(i)}}\mathbb{I}(\tau^{(i)}).
 \end{equation}
 \subsection{Nash Equilibrium for Heterogeneous Tasks in TiFedCrowd}
 \begin{myDef}
@@ -301,48 +300,48 @@ where the system parameters $\{\alpha_i\}_{i=1}^s$ ($\alpha_i>0$) can also repre
 		\mathcal{U}(\bm{r}^\ast,\bm{a}^\ast) \ge \mathcal{U}(\bm{r},\bm{a}^\ast),
 	\end{equation}	
 	\begin{equation}
-		u_k^i(r_i^\ast,{a_k^i}^\ast) \ge u_k^i(r_i^\ast,a_k^i),\, \forall k_i\in\bm{\mathcal{N}}_i\subseteq\{\bm{\mathcal{N}}_i\}_{i=1}^s.
+		u_k^{(i)}({r^{(i)}}^\ast,{a_k^{(i)}}^\ast) \ge u_k^{(i)}({r^{(i)}}^\ast,a_k^{(i)}),\, \forall k^{(i)}\in\bm{\mathcal{N}}^{(i)}\subseteq\{\bm{\mathcal{N}}^{(i)}\}_{i=1}^s.
 	\end{equation}	
 \end{myDef}
 
-To find the equilibrium at heterogeneous tasks of the client stage in the game, let the first derivative of $u_k^i(r_i,a_k^i)$ with respect to $a_k^i$ be $0$, we have:
+To find the equilibrium at heterogeneous tasks of the client stage in the game, let the first derivative of $u_k^{(i)}(r^{(i)},a_k^{(i)})$ with respect to $a_k^{(i)}$ be $0$, we have:
 \begin{equation}
-	\frac{\partial u_k^i(r_i,a_k^i)}{\partial a_k^i} = r_i-\frac{\gamma_k^i}{1-a_k^i} = 0 \quad
-	\Leftrightarrow\quad {a_k^i}^\ast = 1 - \frac{\gamma_k^i}{r_i}.
+	\frac{\partial u_k^{(i)}(r^{(i)},a_k^{(i)})}{\partial a_k^{(i)}} = r^{(i)}-\frac{\gamma_k^{(i)}}{1-a_k^{(i)}} = 0 \quad
+	\Leftrightarrow\quad {a_k^{(i)}}^\ast = 1 - \frac{\gamma_k^{(i)}}{r^{(i)}}.
 \end{equation}	
 
-Since the second derivative of $u_k^i(r_i,a_k^i)$ with respect to $a_k^i$:
+Since the second derivative of $u_k^{(i)}(r^{(i)},a_k^{(i)})$ with respect to $a_k^{(i)}$:
 \begin{equation}
-	\frac{\partial^2 u_k^i(r_i,a_k^i)}{\partial {a_k^i}^2} = - \frac{\gamma_k^i}{(1-a_k^i)^2} < 0.
+	\frac{\partial^2 u_k^{(i)}(r^{(i)},a_k^{(i)})}{\partial {a_k^{(i)}}^2} = - \frac{\gamma_k^{(i)}}{(1-a_k^{(i)})^2} < 0.
 \end{equation}	
-${a_k^i}^\ast = 1 - \frac{\gamma_k^i}{r_i}$ is the global optimal response accuracy of the client and is unique.
+${a_k^{(i)}}^\ast = 1 - \frac{\gamma_k^{(i)}}{r^{(i)}}$ is the global optimal response accuracy of the client and is unique.
 
-According to $0<{a_k^i}^\ast<1$, the value range of the reward rate $r_i$ is derived as follows:
+According to $0<{a_k^{(i)}}^\ast<1$, the value range of the reward rate $r^{(i)}$ is derived as follows:
 \begin{equation}
-	0 < {a_k^i}^\ast = 1 - \frac{\gamma_k^i}{r_i} < 1\quad
-	\Leftrightarrow\quad r_i > \gamma_k^i, \quad i=1,2,\dots,s.
+	0 < {a_k^{(i)}}^\ast = 1 - \frac{\gamma_k^{(i)}}{r^{(i)}} < 1\quad
+	\Leftrightarrow\quad r^{(i)} > \gamma_k^{(i)}, \quad i=1,2,\dots,s.
 \end{equation}	
 
 Based on the sets of the completion time $\bm{T}^\ast$ and the optimum response accuracy $\bm{a}^\ast$, the utility of the server at heterogeneous tasks can be defined as follows:
 \begin{equation}
-	\mathcal{U}(\bm{r},\bm{a}^\ast) = \frac{1}{\zeta}\cdot \sum_{i=1}^{s}\sum_{k=1}^{n_i}\left(\alpha_i\cdot {a_k^i}^\ast\cdot \mathbb{I}(\tau^i)\right) + \beta\cdot(T_{\max}-\max_{\mathbb{I}(\tau^i)=1,1\le k\le n_i,1\le i\le s}{T_k^i}^\ast) - \sum_{i=1}^{s}\sum_{k=1}^{n_i}\left(r_i\cdot {a_k^i}^\ast\cdot \mathbb{I}(\tau^i)\right).
+	\mathcal{U}(\bm{r},\bm{a}^\ast) = \frac{1}{\zeta}\cdot \sum_{i=1}^{s}\sum_{k=1}^{n^{(i)}}\left(\alpha^{(i)}\cdot {a_k^{(i)}}^\ast\cdot \mathbb{I}(\tau^{(i)})\right) + \beta\cdot(T_{\max}-\max_{\mathbb{I}(\tau^{(i)})=1,1\le k\le n^{(i)},1\le i\le s}{T_k^{(i)}}^\ast) - \sum_{i=1}^{s}\sum_{k=1}^{n^{(i)}}\left(r^{(i)}\cdot {a_k^{(i)}}^\ast\cdot \mathbb{I}(\tau^{(i)})\right).
 \end{equation}
 
 Then let the first derivative of $U(\bm{r},\bm{a}^\ast)$ with respect to $\bm{r}$ be $0$, we obtain
 \begin{equation}
 	\begin{aligned}
-		\frac{\partial \mathcal{U}(\bm{r},\bm{a}^\ast)}{\partial r_i} &= \frac{1}{\zeta}\cdot \sum_{k=1}^{n_i}(\alpha_i\cdot \frac{\partial {a_k^i}^\ast}{\partial r_i}\cdot \mathbb{I}(\tau^i)) - \sum_{k=1}^{n_i}(r_i\cdot \frac{\partial {a_k^i}^\ast}{\partial r_i}\ast\cdot \mathbb{I}(\tau^i)) - \sum_{k=1}^{n_i}({a_k^i}^\ast\cdot \mathbb{I}(\tau^i))\\
-		&= \frac{\alpha_i}{\zeta\cdot {r_i}^2}\cdot\sum_{k=1}^{n_i}(\gamma_k^i\cdot\mathbb{I}(\tau^i))-\zeta = 0\\
-		&\Leftrightarrow\quad r_i^\ast =\frac{1}{\zeta}\cdot\sqrt{\alpha_i\cdot\sum_{k=1}^{n_i}(\gamma_k^i\cdot\mathbb{I}(\tau^i))}, \quad i=1,2,\dots,s.
+		\frac{\partial \mathcal{U}(\bm{r},\bm{a}^\ast)}{\partial r^{(i)}} &= \frac{1}{\zeta}\cdot \sum_{k=1}^{n^{(i)}}\left(\alpha^{(i)}\cdot \frac{\partial {a_k^{(i)}}^\ast}{\partial r^{(i)}}\cdot \mathbb{I}(\tau^{(i)})\right) - \sum_{k=1}^{n^{(i)}}\left( r^{(i)}\cdot \frac{\partial {a_k^{(i)}}^\ast}{\partial r^{(i)}}\ast\cdot \mathbb{I}(\tau^{(i)})\right) - \sum_{k=1}^{n^{(i)}}\left({a_k^{(i)}}^\ast\cdot \mathbb{I}(\tau^{(i)})\right)\\
+		&= \frac{\alpha^{(i)}}{\zeta\cdot {r^{(i)}}^2}\cdot\sum_{k=1}^{n^{(i)}}\left(\gamma_k^{(i)}\cdot\mathbb{I}(\tau^{(i)})\right)-\zeta = 0\\
+		&\Leftrightarrow\quad {r^{(i)}}^\ast =\frac{1}{\zeta}\cdot\sqrt{\alpha^{(i)}\cdot\sum_{k=1}^{n^{(i)}}\left(\gamma_k^{(i)}\cdot\mathbb{I}(\tau^{(i)})\right)}, \quad i=1,2,\dots,s.
 	\end{aligned}
 \end{equation}
 
 Taking the second derivative of $U(\bm{r},\bm{a}^\ast)$ with respect to $\bm{r}$, we have
 \begin{equation}
-	\frac{\partial^2 \mathcal{U}(\bm{r},\bm{a}^\ast)}{\partial {r_i}^2} = - \frac{2\cdot\alpha_i}{\zeta\cdot {r_i}^3}\cdot\sum_{k=1}^{n_i}(\gamma_k^i\cdot\mathbb{I}(\tau^i)) < 0.
+	\frac{\partial^2 \mathcal{U}(\bm{r},\bm{a}^\ast)}{\partial {r^{(i)}}^2} = - \frac{2\cdot\alpha^{(i)}}{\zeta\cdot {r^{(i)}}^3}\cdot\sum_{k=1}^{n^{(i)}}\left(\gamma_k^{(i)}\cdot\mathbb{I}(\tau^{(i)})\right) < 0.
 \end{equation}	
 
-Hence, $r_i^\ast =\frac{1}{\zeta}\cdot\sqrt{\alpha_i\cdot\sum_{k=1}^{n_i}(\gamma_k^i\cdot\mathbb{I}(\tau^i))}$ ($i=1,2,\dots,s$) are the global optimal reward rates and they are unique. 
+Hence, ${r^{(i)}}^\ast =\frac{1}{\zeta}\cdot\sqrt{\alpha^{(i)}\cdot\sum_{k=1}^{n^{(i)}}\left(\gamma_k^{(i)}\cdot\mathbb{I}(\tau^{(i)})\right)}$ ($i=1,2,\dots,s$) are the global optimal reward rates and they are unique. 
 
 According to the above, the Nash Equilibrium for Heterogeneous Tasks in TiFedCrowd has been found.
 
