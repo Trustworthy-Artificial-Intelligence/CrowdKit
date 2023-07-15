@@ -300,9 +300,9 @@ where the system parameters $\{\alpha^{(i)}\}_{i=1}^s$ ($\alpha^{(i)}>0$) also c
 
 \subsection{Nash Equilibrium for MHFC in TiFedCrowd}
 \begin{myDef}
-	Nash Equilibrium for MHFC Tasks. For any values of $\bm{r}$ and $\bm{a}$, $(\bm{r}^\ast,\bm{a}^\ast)$ is a Nash equilibrium for MHFC tasks if they satisfy the following conditions:
+	Nash Equilibrium for MHFC Tasks. For any values of $\bm{r}$ and $\bm{A}$, $(\bm{r}^\ast,\bm{A}^\ast)$ is a Nash equilibrium for MHFC tasks if they satisfy the following conditions:
 	\begin{equation}
-		\mathcal{U}(\bm{r}^\ast,\bm{a}^\ast) \ge \mathcal{U}(\bm{r},\bm{a}^\ast),
+		\mathcal{U}(\bm{r}^\ast,\bm{A}^\ast) \ge \mathcal{U}(\bm{r},\bm{A}^\ast),
 	\end{equation}	
 	\begin{equation}
 		u_k^{(i)}({r^{(i)}}^\ast,{a_k^{(i)}}^\ast) \ge u_k^{(i)}({r^{(i)}}^\ast,a_k^{(i)}),\, \forall k^{(i)}\in\bm{\mathcal{N}}^{(i)}\subseteq\{\bm{\mathcal{N}}^{(i)}\}_{i=1}^s.
@@ -326,21 +326,21 @@ According to $0<{a_k^{(i)}}^\ast<1$, the value range of the reward rate $r^{(i)}
 	\Leftrightarrow\quad r^{(i)} > \gamma_k^{(i)}, \quad i=1,2,\dots,s.
 \end{equation}	
 
-Based on the sets of the completion time $\bm{T}^\ast$ and the optimum response accuracy $\bm{a}^\ast$, the utility of the server for MHFC tasks can be defined as follows:
+Based on the sets of the completion time $\bm{T}^\ast$ and the optimum response accuracy $\bm{A}^\ast$, the utility of the server for MHFC tasks can be defined as follows:
 \begin{equation}
-	\mathcal{U}(\bm{r},\bm{a}^\ast) = \frac{1}{\zeta}\cdot \sum_{i=1}^{s}\sum_{k=1}^{n^{(i)}}\left(\alpha^{(i)}\cdot {a_k^{(i)}}^\ast\cdot \mathbb{I}(\tau^{(i)})\right) + \beta\cdot(T_{\max}-\max_{\mathbb{I}(\tau^{(i)})=1,1\le k\le n^{(i)},1\le i\le s}{T_k^{(i)}}^\ast) - \sum_{i=1}^{s}\sum_{k=1}^{n^{(i)}}\left(r^{(i)}\cdot {a_k^{(i)}}^\ast\cdot \mathbb{I}(\tau^{(i)})\right).
+	\mathcal{U}(\bm{r},\bm{A}^\ast) = \frac{1}{\zeta}\cdot \sum_{i=1}^{s}\sum_{k=1}^{n^{(i)}}\left(\alpha^{(i)}\cdot {a_k^{(i)}}^\ast\cdot \mathbb{I}(\tau^{(i)})\right) + \beta\cdot(T_{\max}-\max_{\mathbb{I}(\tau^{(i)})=1,1\le k\le n^{(i)},1\le i\le s}{T_k^{(i)}}^\ast) - \sum_{i=1}^{s}\sum_{k=1}^{n^{(i)}}\left(r^{(i)}\cdot {a_k^{(i)}}^\ast\cdot \mathbb{I}(\tau^{(i)})\right).
 \end{equation}
-Then, let the first derivative of $U(\bm{r},\bm{a}^\ast)$ with respect to $\bm{r}$ be $0$, we obtain
+Then, let the first derivative of $U(\bm{r},\bm{A}^\ast)$ with respect to $\bm{r}$ be $0$, we obtain
 \begin{equation}
 	\begin{aligned}
-		\frac{\partial \mathcal{U}(\bm{r},\bm{a}^\ast)}{\partial r^{(i)}} &= \frac{1}{\zeta}\cdot \sum_{k=1}^{n^{(i)}}\left(\alpha^{(i)}\cdot \frac{\partial {a_k^{(i)}}^\ast}{\partial r^{(i)}}\cdot \mathbb{I}(\tau^{(i)})\right) - \sum_{k=1}^{n^{(i)}}\left( r^{(i)}\cdot \frac{\partial {a_k^{(i)}}^\ast}{\partial r^{(i)}}\ast\cdot \mathbb{I}(\tau^{(i)})\right) - \sum_{k=1}^{n^{(i)}}\left({a_k^{(i)}}^\ast\cdot \mathbb{I}(\tau^{(i)})\right)\\
+		\frac{\partial \mathcal{U}(\bm{r},\bm{A}^\ast)}{\partial r^{(i)}} &= \frac{1}{\zeta}\cdot \sum_{k=1}^{n^{(i)}}\left(\alpha^{(i)}\cdot \frac{\partial {a_k^{(i)}}^\ast}{\partial r^{(i)}}\cdot \mathbb{I}(\tau^{(i)})\right) - \sum_{k=1}^{n^{(i)}}\left( r^{(i)}\cdot \frac{\partial {a_k^{(i)}}^\ast}{\partial r^{(i)}}\ast\cdot \mathbb{I}(\tau^{(i)})\right) - \sum_{k=1}^{n^{(i)}}\left({a_k^{(i)}}^\ast\cdot \mathbb{I}(\tau^{(i)})\right)\\
 		&= \frac{\alpha^{(i)}}{\zeta\cdot {r^{(i)}}^2}\cdot\sum_{k=1}^{n^{(i)}}\left(\gamma_k^{(i)}\cdot\mathbb{I}(\tau^{(i)})\right)-\zeta = 0\\
 		&\Leftrightarrow\quad {r^{(i)}}^\ast =\frac{1}{\zeta}\cdot\sqrt{\alpha^{(i)}\cdot\sum_{k=1}^{n^{(i)}}\left(\gamma_k^{(i)}\cdot\mathbb{I}(\tau^{(i)})\right)}, \quad i=1,2,\dots,s.
 	\end{aligned}
 \end{equation}
-Taking the second derivative of $U(\bm{r},\bm{a}^\ast)$ with respect to $\bm{r}$, we have
+Taking the second derivative of $U(\bm{r},\bm{A}^\ast)$ with respect to $\bm{r}$, we have
 \begin{equation}
-	\frac{\partial^2 \mathcal{U}(\bm{r},\bm{a}^\ast)}{\partial {r^{(i)}}^2} = - \frac{2\cdot\alpha^{(i)}}{\zeta\cdot {r^{(i)}}^3}\cdot\sum_{k=1}^{n^{(i)}}\left(\gamma_k^{(i)}\cdot\mathbb{I}(\tau^{(i)})\right) < 0.
+	\frac{\partial^2 \mathcal{U}(\bm{r},\bm{A}^\ast)}{\partial {r^{(i)}}^2} = - \frac{2\cdot\alpha^{(i)}}{\zeta\cdot {r^{(i)}}^3}\cdot\sum_{k=1}^{n^{(i)}}\left(\gamma_k^{(i)}\cdot\mathbb{I}(\tau^{(i)})\right) < 0.
 \end{equation}	
 Hence, ${r^{(i)}}^\ast =\frac{1}{\zeta}\cdot\sqrt{\alpha^{(i)}\cdot\sum_{k=1}^{n^{(i)}}\left(\gamma_k^{(i)}\cdot\mathbb{I}(\tau^{(i)})\right)}$ ($i=1,2,\dots,s$) are the unique global optimal reward rates for all types of tasks.
 
