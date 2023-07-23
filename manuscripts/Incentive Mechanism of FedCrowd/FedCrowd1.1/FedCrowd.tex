@@ -16,6 +16,7 @@
 \usepackage{threeparttable}
 \usepackage{booktabs}
 \usepackage{subfloat}
+\usepackage{graphicx}
 
 \renewcommand{\algorithmicrequire}{\textbf{Input:}}  
 \renewcommand{\algorithmicensure}{\textbf{Output:}}
@@ -27,32 +28,32 @@
 
 \begin{document}
 	
-\begin{frontmatter}
+	\begin{frontmatter}
 		
-\title{Time-controlled incentive federated crowdsourcing}
+		\title{Time-controlled incentive federated crowdsourcing}
 		
-
-\author[mymainaddress]{Xiaoqian Jiang }
-\ead{220224926@seu.edu.cn}
 		
-\author[mymainaddress]{Jing Zhang
-\corref{mycorrespondingauthor}}
-\ead{jingz@seu.edu.cn}
+		\author[mymainaddress]{Xiaoqian Jiang }
+		\ead{220224926@seu.edu.cn}
 		
-%\author[thirdaddress]{}
-%\ead{}
+		\author[mymainaddress]{Jing Zhang
+			\corref{mycorrespondingauthor}}
+		\ead{jingz@seu.edu.cn}
 		
-\cortext[mycorrespondingauthor]{Corresponding author}
-\address[mymainaddress]{School of Cyber Science and Engineering, Southeast University, No. 2 SEU Road, Nanjing 211189, China}
-%\address[thirdaddress]{}
+		%\author[thirdaddress]{}
+		%\ead{}
 		
-\begin{abstract}
-			
-\end{abstract}
-\begin{keyword}
-	
-\end{keyword}
-\end{frontmatter}
+		\cortext[mycorrespondingauthor]{Corresponding author}
+		\address[mymainaddress]{School of Cyber Science and Engineering, Southeast University, No. 2 SEU Road, Nanjing 211189, China}
+		%\address[thirdaddress]{}
+		
+		\begin{abstract}
+			Crowdsourcing is an effective application to solve difficult tasks that cannot be solved by computers alone through a combination of human intelligence. However, collecting data from massive Internet workers through crowdsourcing may expose them to the risk of privacy breaches because of the sharing of personal data, which will reduce workers’ willingness to participate in crowdsourcing tasks. To address this series of problems, we introduce federated learning as well as design an incentive mechanism to put forward TiFedCrowd, which aims to mitigate the risk of privacy breaches for crowd workers while obtaining high-quality crowdsourcing data at the most economical cost possible. TiFedCrowd allows clients to keep privacy-related data locally while only needing to upload the trained model parameters to the server. The server then aggregates these uploaded models to train the global model. TiFedCrowd also models the federated crowdsourcing process as a two-stage Stackelberg game to motivate more workers to complete crowdsourcing tasks with high quality and efficiency concurrently. Meanwhile, we also define a time control mechanism to manage the quality of the submitted model and the range of data freshness and waiting time for the data requester. TiFedCrowd requires the client to complete the federated crowdsourcing task within a specified time interval while maximizing the utility of both the clients and the server. We find the unique global optimal solution through the unique existence of Nash equilibrium. We also extended TiFedCrowd to the multiple heterogeneous federated crowdsourcing scenario. Finally, we conduct experiments to verify the effectiveness of TiFedCrowd.
+		\end{abstract}
+		\begin{keyword}
+			crowdsourcing learning, federated learning (FL), privacy protection, incentive mechanism, Stackelberg game 
+		\end{keyword}
+	\end{frontmatter}
 
 \section{Introduction}
 Crowdsourcing provides a feasible way to introduce human intelligence to solve notoriously difficult tasks that cannot be solved by computers alone \citep{Vaughan2017MakingBU}. One of the most widespread applications of crowdsourcing is to collect data from massive Internet workers. The collected data including annotations, locations, content, and so on could be further utilized in downstream AI tasks such as building CV \citep{Kovashka2016CrowdsourcingIC}, NLP \citep{Wang2013PerspectivesOC}, recommendation \citep{Lin2023CompetitiveGI} models. Commercial crowdsourcing platforms such as MTurk, Appen, etc., have provided effective interaction modes between task publishers and workers to facilitate the execution of crowdsourced tasks. It is worth noting that while crowdsourcing provides convenience, it may also expose workers' privacy, which will reduce workers' willingness to participate in tasks. Prior research has shown that sensitive private information such as behavior traits, vocal prints, face images, and locations could be revealed along with the submitted data \citep{xia2020privacy,Tong2020FederatedLI}. Thus, privacy issues are attracting more and more attention in crowdsourcing task design. Some traditional approaches can achieve privacy protection by adding perturbation (e.g., implemented as differential privacy \citep{luo2016incentive,wang2022pps}) or noises \citep{to2018ppo,huang2020traffic}. Notwithstanding, these methods undermine the quality of crowdsourcing since the data uploaded by the workers are blurred.
@@ -71,7 +72,7 @@ To address the above challenges, this paper puts forward \underline{Ti}me-contro
 	\item TiFedCrowd allocates rewards according to contributions, which has strong interpretability. It is conducive to attracting and retaining high-quality crowdsourcing workers, thus maintaining the fairness and accountability of the federated crowdsourcing market.
 \end{itemize}
 
-The remainder of the paper is organized as follows: Section~\ref{sec:rw} briefly reviews the related studies.  Section~\ref{sec:mtd} presents the details of the proposed method.  Section~\ref{sec:exp} shows the experimental results and discusses them. Section~\ref{sec:con} concludes the paper with future work.
+The remainder of the paper is organized as follows: Section~\ref{sec:rw} briefly reviews the related studies.  Section~\ref{sec:mtd} presents the details of the proposed method. Section~\ref{tmh} demonstrates the generalization of TiFedCrowd to the multiple heterogeneous federated crowdsourcing scenario. Section~\ref{sec:exp} shows the experimental results and discusses them. Section~\ref{sec:con} concludes the paper with future work.
 
 \section{Related Work}\label{sec:rw}
 In this section, we briefly review the technical progress in two directions, i.e., privacy protection in crowdsourcing and incentive mechanism in federated learning.
@@ -86,12 +87,12 @@ An incentive mechanism is necessary to ensure the quality and efficiency of FL. 
 
 Unfortunately, none of these incentive mechanisms works well in federated crowdsourcing that needs to collect data samples manually (i.e., so-call data crowdsourcing). Moreover, they all ignore the relationship between the time that workers collect data and the quality of submitted data in federated crowdsourcing and fail to respond to some delays in receiving data. The proposed TiFedCrowd in this study sets a time interval whose lower bound preliminarily screens the quality of submitted data and whose upper bound enables the task publisher to specify the fresh level of the data. Furthermore, the contribution of a worker is measured according to the accuracy \footnote{In this study, we simply use accuracy to measure the performance of learning models.} with which the client completes a local training model within the given time, and the rewards are fairly allocated in an economical manner, so as to motivate more workers to complete crowdsourcing tasks with high quality and efficiency.
 
-\section{The Proposed TiFedCrowd Incentive Method} \label{sec:mtd}
+\section{Methodology} \label{sec:mtd}
 In this section, we first present the federated crowdsourcing problem settings. Then, we present the proposed incentive mechanism as a two-stage Stackelberg game and also derive its equilibrium. Next, we summarize the whole process as an algorithm. Finally, we prove that time control is necessary for federated crowdsourcing.
 
 \begin{figure}
 	\centering
-	\includegraphics[width=5.5in]{TiFedCrowd framework.pdf}
+	\centerline{\includegraphics[width=5.5in]{TiFedCrowd framework.pdf}}
 	\caption{Framework of the time-controlled incentive federated crowdsourcing (TiFedCrowd).}
 	\label{fig:framework}
 \end{figure}
@@ -188,7 +189,7 @@ Based on the above derivations for clients (followers), as the leader in the gam
 
 Taking the first derivative of $U(r,\bm{a}^\ast)$ with respect to $r$, we obtain
 \begin{equation}
-		\begin{aligned}
+	\begin{aligned}
 		\frac{\partial U(r,\bm{a}^\ast)}{\partial r} &= \frac{1}{\zeta}\cdot \sum_{k=1}^n\left(\alpha\cdot \frac{\partial a_k^\ast}{\partial r}\cdot \mathbb{I}(\tau)\right) - \sum_{k=1}^n\left(r\cdot \frac{\partial a_k^\ast}{\partial r}\ast\cdot \mathbb{I}(\tau)\right) - \sum_{k=1}^n(a_k^\ast\cdot \mathbb{I}(\tau))\\&= \frac{\alpha}{\zeta\cdot r^2}\cdot\sum_{k=1}^n(\gamma_k\cdot\mathbb{I}(\tau))-\zeta.
 	\end{aligned}
 \end{equation}
@@ -212,20 +213,25 @@ To ensure the quality and efficiency of crowdsourcing, TiFedCrowd limits the tim
 
 Based on Eq.~(\ref{Eq:server-u}), we remove the time control in the definition of the server utility as follows: 
 \begin{equation}
-	\bar{U} = \frac{1}{n}\cdot \sum_{k=1}^n(\alpha\cdot a_k)  - \sum_{k=1}^n(r\cdot a_k),
+	\bar{U} = \frac{1}{n}\cdot \sum_{k=1}^n(\alpha\cdot a_k) + \beta\cdot(T_{\max}-\max_{1\le k\le n}T_k) - \sum_{k=1}^n(r\cdot a_k),
 \end{equation}
 where $\sum_{k=1}^n(r\cdot a_k)$ is the cost totally spent for incentivizing clients to participate in federated crowdsourcing. Apparently, the total cost $\sum_{k=1}^n(r\cdot a_k)$ for the server without time control is more than $\sum_{k=1}^n(r\cdot a_k\cdot \mathbb{I}(\tau))$ for one with time control.
 
 To compare the magnitude of $\bar{U}$ and $U$, we take the difference between $\bar{U}$ and $U$:
 \begin{equation}
-	\bar{U} -U = \frac{1}{n}\cdot \sum_{k=1}^n(\alpha\cdot a_k)-\frac{1}{\zeta}\cdot \sum_{k=1}^n(\alpha\cdot a_k\cdot \mathbb{I}(\tau))- \beta\cdot(T_{\max}-\max_{\mathbb{I}(\tau)=1,1\le k\le n}T_k) - \sum_{k=1}^n(r\cdot a_k\cdot (1-\mathbb{I}(\tau))).
+	\bar{U} -U = \frac{1}{n}\cdot \sum_{k=1}^n(\alpha\cdot a_k)-\frac{1}{\zeta}\cdot \sum_{k=1}^n(\alpha\cdot a_k\cdot \mathbb{I}(\tau))- \beta\cdot(\max_{1\le k\le n}T_k-\max_{\mathbb{I}(\tau)=1,1\le k\le n}T_k) - \sum_{k=1}^n(r\cdot a_k\cdot (1-\mathbb{I}(\tau))).
+\end{equation}
+
+The completion time $T$ must satisfy the following derivation：
+\begin{equation}
+	\max_{1\le k\le n}T_k\ge\max_{\mathbb{I}(\tau)=1,1\le k\le n}T_k\quad\Leftrightarrow\quad\beta\cdot(\max_{1\le k\le n}T_k-\max_{\mathbb{I}(\tau)=1,1\le k\le n}T_k)\ge0.
 \end{equation}
 
 For those data/models submitted after the deadline $T_{\max}$, whose freshness does not meet the requirements of the requester, we consider the accuracy level of their contributions to be $0$. Since TiFedCrowd uses the time control mechanism to filter out low-quality data/models, we have the following results:
 \begin{equation}
 	\begin{aligned}
-		\frac{1}{n}\cdot \sum_{k=1}^n a_k < \frac{1}{\zeta}\cdot \sum_{k=1}^n a_k\cdot \mathbb{I}(\tau)\quad
-		&\Leftrightarrow\quad \frac{1}{n}\cdot \sum_{k=1}^n(\alpha\cdot a_k)-\frac{1}{\zeta}\cdot \sum_{k=1}^n(\alpha\cdot a_k\cdot \mathbb{I}(\tau))<0\\&\Leftrightarrow\quad  \bar{U} -U<0\quad\Leftrightarrow\quad  \bar{U} < U.
+		\frac{1}{n}\cdot \sum_{k=1}^n a_k < \frac{1}{\zeta}\cdot \sum_{k=1}^n\left( a_k\cdot \mathbb{I}(\tau)\right)\quad
+		&\Leftrightarrow\quad \frac{1}{n}\cdot \sum_{k=1}^n(\alpha\cdot a_k)-\frac{1}{\zeta}\cdot \sum_{k=1}^n\left(\alpha\cdot a_k\cdot \mathbb{I}(\tau)\right)<0\\&\Leftrightarrow\quad  \bar{U} -U<0\quad\Leftrightarrow\quad  \bar{U} < U.
 	\end{aligned}
 \end{equation}	
 
@@ -270,7 +276,7 @@ The process of the client side includes the following three steps: 1) receive th
 
 The time complexity analysis of this algorithm needs to be discussed from the client side and the server side respectively. On the client side, the main time consumption of the algorithm is data collection and model training. The data collection time complexity is $O(m)$, where $m$ is the number of tasks collected by the client. The model training time complexity is $O(\log(a_k^{-1}))$, related to training the local model for attaining the accuracy $a_k$. Hence, the total time complexity of TiFedCrowd on the client side is $S[O(m)+O(\log(a_k^{-1}))]$. The space complexity is $O(\xi)$, where $\xi$ is the size of model parameters. On the server side, the main time consumption is to interact with the $n$ clients and the main space consumption is to aggregate the $n$ client models. Therefore, the time complexity of TiFedCrowd on the server side is $O(n)$ and the space complexity is $O(n\cdot\xi)$.
 
-\section{TiFedCrowd for Multiple Heterogeneous Federated Crowdsourcing Tasks}
+\section{TiFedCrowd for Multiple Heterogeneous Federated Crowdsourcing Tasks} \label{tmh}
 In this section, we will show that TiFedCrowd can be easily extended to Multiple Heterogeneous Federated Crowdsourcing (MHFC) tasks. We first present the problem settings of MHFC tasks. Then, we model TiFedCrowd for MHFC as a two-stage Stackelberg game. Finally, we derive the Nash equilibrium for the model.
 
 \subsection{Problem Settings of MHFC Tasks}
@@ -347,12 +353,118 @@ Hence, ${r^{(i)}}^\ast =\frac{1}{\zeta}\cdot\sqrt{\alpha^{(i)}\cdot\sum_{k=1}^{n
 We have derived the Nash equilibrium for MHFC tasks in TiFedCrowd. This is not difficult for us to write an algorithm that is similar to Algorithm~\ref{Algo1}, which can solve the incentive problem of MHFC tasks.
 
 \section{Experiments} \label{sec:exp}
-Experiments go here...
+In this section, we conducted some experiments to describe and certify that the incentive mechanism of our TiFedCrow is effective. In subsection~\ref{PCWB}, we compared the performance of TiFedCrowd with several baselines to demonstrate the optimal applicability of Tifed. In subsection~\ref{RTTCM}, we removed the time control mechanism first. Then we compared the performance with TiFedCrow to illustrate the importance of time control mechanism. In subsection~\ref{ITNC}, we observed the impact of the number of clients on the performance of TiFedCrowd. In subsection~\ref{ERCP}, We verified the effectiveness of TiFedCrowd on a real dataset. In subsection~\ref{CTCT}, we compared the time taken by the server to calculate the reward rate in TiFedCrow and iFedCrow \citep{kang2022incentive} to show that TiFedCrow is superior to iFedCrow not only in the time control mechanism but also in the calculation time. Each experiment was run 20 times separately to calculate the average result. 
+
+\subsection{Performance Comparison with Baselines} \label{PCWB}
+Considering that \cite{pandey2019incentivize} is aiming to minimize the communication cost between server and clients, \cite{kang2022incentive} is aiming to encourage workers to constantly collect fresh data, while we aim to obtain a more accurate global model at a lower cost, moreover, we each define model performance differently, we did not compare with these two similar approaches. However, in this subsection, we compared the performance of the incentive mechanism in our TiFedCrowd with three baselines:
+\begin{itemize}
+	\item MAX: To select the largest reward rate to obtain the best response. 
+	\item MIN: To pick the smallest reward rate to pay the minimum incentive cost.
+	\item RANDOM: To randomly choose the reward rate to motivate the clients. 
+\end{itemize}
+
+We set the number of participating clients $n$ and the completion time interval $[T_{\min},T_{\max}]$ to $30$ and $[5,30]$ (unit: second) respectively. Since the number of valid participants within a reasonable range would not affect the comparison results in this section, we assumed that all clients effectively have participated in federated crowdsourcing tasks (i.e., the completion time $T_k\in[T_{\min},T_{\max}],\,\forall k\in\bm{\mathcal{N}}$). Besides, we initialized the utility of the server with the parameters $\alpha=300$ and $\beta=0$. Nevertheless, any reasonable settings for these values would not affect the comparisons on performance. 
+
+We compared at different client parameter $\gamma$ the performance between the incentive mechanism proposed in TiFedCrowd and the baselines to illustrate that our method is efficient. Therefore, we let $\gamma$ be uniformly distributed randomly in intervals $[\Delta, \Delta + 0.5]$ ($\Delta = 1.0, 1.5, 2.0, 2.5, 3.0, 3.5$) to analyze the impact of the client parameter $\gamma$.
+
+\begin{figure}
+	\centering
+	\centerline{\includegraphics[width=5.5in]{fig2.pdf}}
+	\caption{Reward rate ($r$), average utility of clients, utility of the server, and total incentive cost vs. client parameter $\gamma$ ($\gamma\in[\Delta,\Delta+0.5]$).}
+	\label{fig:2}
+\end{figure}
+
+Figure~\ref{fig:2} respectively reports under different client parameters $\gamma$ the reward rate ($r$), the average utility of clients, the utility of the server, and the total incentive cost of TiFedCrowd and the baselines. It is not hard to observe the competition between  clients and the server that the higher the reward rate ($r$), the greater the average utility of clients while the less the utility of the server. Besides, we have other observations as follows: \lowercase{\romannumeral1}) With the increase of client parameter $\gamma$, the reward rate ($r$) of TiFedCrowd, MAX, and MIN also increases steadily, while the reward rate ($r$) of RANDOM distributes randomly within the range of MIN and MAX. This is because the larger customer parameter $\gamma$ brings the higher cost for the clients to participate in federated crowdsourcing so greater incentives are needed to motivate the participation of the clients. \lowercase{\romannumeral2}) Among these four methods, MAX always has the most average utility of clients while MIN always has the least. After all, MAX chooses the largest reward rate to motivate the client while MIN selects the smallest one. \lowercase{\romannumeral3}) The average utility of clients of TiFedCrowd, MAX, and MIN decreases as the client parameter $\gamma$ gets larger. Since the increase of the client parameter $\gamma$ means that the clients have to spend more cost to complete the federated crowdsourcing tasks, their profits inevitably reduce. \lowercase{\romannumeral4}) TiFedCrowd results in the highest utility of the server among the four methods whatever the value of the client parameter $\gamma$ because TiFedCrowd always incentivizes the client with the optimum reward rate to maximize the utility of the server. However, the utility of the server of MAX is always the lowest. And it is easy to understand that MAX always incentivize clients with the highest reward rate, which greatly increases the total cost of the server.
+In addition, the utility of the server of MIN is higher than it of MAX all the time. Although MIN minimizes the total cost on the server-side by incentivizing clients with the minimal reward rate, it also causes the clients to upload low-quality models thus reducing the utility of the server. \lowercase{\romannumeral5}) The total incentive cost of MAX, MIN, and TiFedCrowd almost does not change with different client parameter $\gamma$. This means that how much clients spend in completing the federated crowdsourcing tasks does not affect the total incentive cost on the server-side when the number of valid participants is fixed. \lowercase{\romannumeral6}) Except for RANDOM, the utility of the server of TiFedCrowd, MAX, and MIN becomes less and less as the client parameter $\gamma$ increases. The reason is that the larger client parameter $\gamma$ leads to the higher cost of the client to complete the federated crowdsourcing tasks, so the client will appropriately reduce the local training accuracy to reduce the computational cost to maximize its utility. \lowercase{\romannumeral7}) Although randomly selecting the reward rate to incentivize the clients in RANDOM brings good utility to both the clients and the server, randomizing the reward results in a higher reward for submitting a low-quality model while a lower reward for submitting a high-quality model. This not only breaks the fairness of the crowdsourcing market but also makes it is no interpretability, which is not conducive to long-term cooperation between clients and crowdsourcing platforms.
+All above observations illustrate that TiFedCrowd can maximize the utility of the server side with as little cost as possible on the premise of ensuring the fairness of the crowdsourcing market and the interpretability of the incentive mechanism.
+
+\subsection{Remove The Time Control Mechanism}\label{RTTCM}
+
+To manifest the effectiveness of the time control mechanism in TiFedCrowd, we compared the performance between TiFedCrowd and which removed time control (RTC). In the experiments of this section, we fixed the client parameter $\gamma\in[1.0,1.5]$. The values of other parameters were the same as those in section~\ref{PCWB}. Of course, any other reasonable values would have the same comparison results. Since the upper bound $T_{\max}$ of the time interval $[T_{\min},T_{\max}]$ is set subjectively by the data/models requster, the evaluation criteria of its screening effect on the quality of the collected data depends on the setter's subjective satisfaction. Here we assumed that the completion time $T$ for all clients satisfy the constraint $T_{\max}$ (i.e, $T_k\le T_{\max},\,\forall k\in\bm{\mathcal{N}}$) while researching the screening effect of the lower bound $T_{\min}$ on the quality of the collected data. To investigate the effect of the valid participation rate (the percentage of valid participants (i.e., $T_k\in [T_{\min},T_{\max}],\, k\in\bm{\mathcal{N}}$) among all participating clients), we set the valid participation rate for six gradients: $100\%$, $90\%$, $80\%$, $70\%$, $60\%$, $50\%$. 
+
+\begin{figure}
+	\centering
+	\centerline{\includegraphics[width=5.5in]{fig3.pdf}}
+	\caption{Reward rate ($r$), average utility of clients, utility of the server, and total incentive cost vs. valid participation rate.}
+	\label{fig:3}
+\end{figure}
+
+Figure~\ref{fig:3} reveals the comparison between TiFedCrowd and RTC for the reward rate ($r$), the average utility of clients, the utility of the server, and the total incentive cost. Obviously, there is no difference in performance between TiFedCrowd and RTC when the valid participation rate reaches $100\%$. At this point, all uploaded models in TiFedCrowd are accepted by the server as in RTC. And other observations are as follows: \lowercase{\romannumeral1}) There is little fluctuation of the reward rate ($r$) in the RTC with the change of different valid participation rates. However, in TiFedCrowd, the reward rate ($r$) increases as the valid participation rate decreases. According to Eq. (~\ref{eq:opt_r}), the reward rate ($r$) under the Nash equilibrium is only related to the number of valid participants $\zeta$ and the client parameter $\gamma$. Since the client parameters $\{\gamma_k\}_{k=1}^{30}$ are uniformly distributed on the interval $[0.5, 1.0]$, moreover, the number of valid participants $\zeta$ for RTC is always $30$, the reward rate ($r$) in RTC fluctuates only in a very small range. But the valid participants of TiFedCrowd become less and less as the decrease of valid participation rate, so incentives (e.g., the reward rate ($r$)) on the server-side need to be increased to encourage more clients to participate in federated crowdsourcing validly to collect enough data. \lowercase{\romannumeral2}) The lower the valid participation rate, the less the average utility of clients and the utility of the server in RTC but the more in TiFedCrowd. Because the lower the valid participation rate, the lower the average accuracy the clients contribute in RTC, which incurs a decrease both in the average reward received by the clients and the accuracy of the global model. Fortunately, TiFedCrowd has a time control mechanism to screen out and reject low-accuracy models by specifying the minimum completion time, so the average accuracy the clients contribute and the accuracy of the global model will not be reduced. For one thing, fewer valid participants lead to less total incentive cost on the server-side in TiFedCrowd thus increasing the utility of the server. For another thing, the decrease in the valid participation rate increases the reward rate ($r$) in TiFedCrowd, for which the average utility of clients increases. \lowercase{\romannumeral3}) The total incentive cost of both RTC and TiFedCrowd reduces with the decrease of effective participation rate. But the reasons for the decline are different. The reduction of the total incentive cost in TiFedCrowd is due to the decrease in the number of valid participants. While in RTC, the total incentive cost on the server-side reduces because the server accepts more low-quality data/models. \lowercase{\romannumeral4}) As long as the valid participation rate is less than $100\%$, the reward rate ($r$), the average utility of clients, and the utility of the server in TiFedCrowd are always higher than in RTC. The gap even grows as the valid participation rate decreases. In other words, as long as the valid participation rate does not reach $100\%$, TiFedCrowd always perform better than RTC. The time control mechanism in TiFedCrowd can effectively prevent malicious clients from submitting low-quality data/models in exchange for quick rewards, thus ensuring the quality of the final global model.
+
+\subsection{Impact of The Number of Clients}\label{ITNC}
+
+In this subsection, We further studied the impact of the number of clients on the performance of TiFedCrowd. To analyze the number of clients alone, we fixed the effective participation rate to $100\%$. That is, all clients of the experiments in this subsection were valid participants (i.e., the completion time $T_k\in[T_{\min},T_{\max}],\,\forall k\in\bm{\mathcal{N}}$). The other parameters were set as in subsection~\ref{RTTCM}. Certainly, as long as these parameters were taken within a reasonable range, the same comparison results could be obtained.
+
+\begin{figure}
+	\centering
+	\centerline{\includegraphics[width=5.5in]{fig4.pdf}}
+	\caption{Reward rate ($r$), average utility of clients, utility of the server, and total incentive cost vs. number of clients.}
+	\label{fig:4}
+\end{figure}
+
+As the number of clients exceeds $35$, the comparison results tend to be in a balanced state. Therefore, in Figure~\ref{fig:4}, we plotted the reward rate ($r$), the average utility of clients, the utility of the server, and the total incentive cost in TiFedCrowd compared to them in baselines as the number of clients increases from $15$ to $35$. We have the following observations: \lowercase{\romannumeral1}) The reward rate ($r$) and the average utility of clients have the similar changing trend as the number of clients varies. According to Eq.~(\ref{eq:reward}), we define in TiFedCrowd that the rewards a client receives is proportional to the accuracy it contributes. Based on Eq.~(\ref{eq:a_k_ast}), and because we controlled that the client parameters $\{\gamma_k\}_{k=1}^n$ were uniformly distributed in a small interval, the accuracy difference of these clients contribution was small under the uniformly declared reward rate ($r$) of the server. So did the cost they spend based on Eq.~(\ref{eq:cost}). Therefore, as the variation of the number of clients, the changing trend of the reward rate ($r$) and the average utility of clients is almost the same in Figure~\ref{fig:4}. \lowercase{\romannumeral2}) MAX always has the highest reward rate ($r$). MIN always has the lowest reward rate ($r$). The reward rate ($r$) of RANDOM and TiFedCrow is always between MIN and MAX. According to the way they select the reward rate ($r$), such magnitude relationship of the reward rate ($r$) in these four methods remains the same regardless of how the number of clients varies. So does the average utility of clients since it always has a similar change trend as the reward rate ($r$). \lowercase{\romannumeral3}) In MAX and MIN, the reward rate ($r$) and the average utility of clients are always maintained near the constant value and do not fluctuate with the variation of the number of clients because the selection of the reward rate ($r$) of MAX and MIN depends only on the reasonable range of $r$ and not on the number of clients. The reward rate ($r$) and the average utility of clients in TiFedCrowd get smaller and smaller as the number of clients increases. This is because TiFedCrowd always selects the optimum reward rate ($r$) to motivate the clients to maximize the utility of the server. With the increasing number of participating clients, the server-side has to reduce the incentive effort to save the total incentive cost and ensure the maximum utility of the server. In addition, more clients participating in the competition also cause the average utility of the clients to decline. \lowercase{\romannumeral4}) In all four methods, the utility of the server declines as the number of clients increases because of the increase in the total incentive cost spent by the server. Besides, the utility of the server in TiFedCrowd and MIN decreases slowly while in MAX sharply. TiFedCrowd continually adjusts the incentives to maximize the utility of the server. MIN always incentivizes the clients with minimal effort while MAX with maximal. MAX obviously causes serious waste of budget. \lowercase{\romannumeral5}) The utility of the server of TiFedCrowd is always the highest among the four methods. Although the utility of the server of MIN is only slightly lower than TiFedCrowd, MIN achieves a high level of utility of the server in a way that minimizes the total incentive cost on the server side. Therefore, The method of MIN may not only reduce the accuracy of the global model but also increase the reluctance of the clients to participate, which is undesirable. \lowercase{\romannumeral6}) The total incentive cost aggrandizes for all four methods as the number of clients increases. Relate to what we observed in subsection~\ref{PCWB}, the cost of the clients to complete the federated crowdsourcing tasks does not affect the total incentive cost on the server-side when the number of the valid participants is fixed. Therefore, the number of valid participants is the direct influence on the total incentive cost on the server-side. \lowercase{\romannumeral7}) Comprehensive reward rate ($r$), the average utility of clients, and the utility of the server, the method of RANDOM is much more flexible compared to other methods. However, as we analyzed in section subsection~\ref{PCWB}, the method of RANDOM breaks the fairness of the crowdsourcing market as well as compromises the long-term cooperation between clients and crowdsourcing platforms.
+
+\subsection{Experiment with Real Crowdsourcing Project} \label{ERCP}
+
+We used a short term heart rate prediction model of an LSTM-based model called FitRec \citep{ni2019modeling} for the experiment on a dataset named Endomondo \citep{ni2019modeling}, which containes data items including user identity, gender, sport, heart rate, timestamps, distance, speed, longitude, latitude, and altitude. Endomondo is a real-word dataset collecting data from the website endomondo.com. 
+
+We set the number of clients to be $20$ and the valid participation rate to be $80\%$. Then, we let each client sample data at a random sequence of time intervals between 5 and 10 seconds. We measured the performance of the prediction tasks by the Root Mean Squared Error (RMSE).
+
+\begin{table}
+	%\renewcommand\arraystretch{1.5}
+	\caption{Experimental results of prediction model FitRec on dataset Endomondo}
+	\centering
+	\resizebox{\textwidth}{16mm}{ 
+	\begin{tabular}{cccccc} 
+		\toprule
+		& \textbf{ Reward rate ($r$) }  & \textbf{ Average utility of clients } & \textbf{ Utility of the server } & \textbf{ Total incentive cost } & \textbf{ RMSE }      \\ 
+		\hline
+		\textbf{ MAX }     & 9.487 & 5.687 & 128.315 & 131.617 & 3.059 \\
+		\textbf{ MIN }    & 2.483 & 0.371 & 128.736 & 18.970 & 17.079 \\
+		\textbf{ RANDOM }    & 5.987 & 3.115 & 152.032 & 81.325 & 4.577 \\
+		\textbf{ TiFedCrow } & 4.905 & 1.907 & 163.568 & 57.961 & 3.422  \\
+		\textbf{ RTC } & 4.376 & 1.420 & 135.191 & 55.686 & 5.611 \\ 
+		\textbf{ iFedCrow }   & - & - & - &  & 5.912 \\
+		\bottomrule
+	\end{tabular}}
+	\label{tab:t1}
+\end{table}
+
+The experimental results are shown in Table~\ref{tab:t1}. We have the following findings: \lowercase{\romannumeral1}) There is no doubt that MAX makes the model perform best because it always motivates the clients to the maximum. Moreover, MAX also makes the average utility of clients the highest. However, it minimizes the utility of the server, which is not cost-effective for the server-side. \lowercase{\romannumeral2}) Although the utility of the server in MIN is higher than in MAX, the model based on method MIN has the worst performance. As we analyzed in subsection~\ref{ITNC}, MIN maximizes the utility of the server by minimizing the total incentive cost on the server side. In addition, the comparison of model performance based on these two methods precisely demonstrates the necessity of theincentive mechanism for federated crowdsourcing. \lowercase{\romannumeral3}) The performance of the TiFedCrowd-based model is only slightly worse than the MAX-based. However, TiFedCrowd makes the utility of the server far more than MAX. It can be seen that MAX causes a lot of waste of incentive cost on the server side. \lowercase{\romannumeral4}) Models based on RTC and iFedCrowd \citep{kang2022incentive} have similar performance. But they still perform slightly worse than RANDOM- based model. Neither RTC nor iFedCrowd has a time control mechanism to filter out low-quality data. Obviously, the time control mechanism has a significant effect on improving the performance of the model.
+
+\subsection{Comparison of The Calculation Time} \label{CTCT}
+
+In subsection~\ref{ERCP}, we compared our TiFedCrowd to iFedCrowd \citep{kang2022incentive} which is the closest method to our TiFedCrowd. However, our TiFedCrowd is superior to iFedCrowd not only because we use the time control mechanism to screen out low-quality data as mentioned in subsection~\ref{ERCP}. In this subsection, we performed experiments to show that our TiFedCrowd has a shorter computing time than iFedCrowd. 
+
+We compared the time for the server to calculate the reward rate ($r$) each time in both methods TiFedCrowd and iFedCrowd. Table~\ref{tab:t2} records the run time of 1000 executions for each of the two methods varying the number of clients. The hardware configuration used for our calculations is Intel(R) core(TM) i5, 8G.
+
+\begin{table}
+	\caption{The time (the measuring unit: second) for the server to calculate the reward rate ($r$)}
+	\centering
+	\setlength{\tabcolsep}{8mm}{ 
+		\begin{tabular}{ccc} 
+			\toprule
+			\textbf{ The number of clients } & \textbf{ TiFedCrowd }  & \textbf{ iFedCrowd }      \\ 
+			\hline
+			 10     & 0.022 & 0.872  \\
+			 100    & 0.022 & 1.899  \\
+			 500    & 0.022 & 6.779 \\
+			 1000   & 0.028 & 12.969 \\
+			 5000   & 0.042 & 69.516 \\ 
+			 10000  & 0.061 & 138.364  \\
+			\bottomrule
+	\end{tabular}}
+	\label{tab:t2}
+\end{table}
+
+As the number of clients increases, the computing time of TiFedCrowd changes very slowly. Even if the number of clients is scaled up to 1000 times, the computing time of TiFedCrowd is scaled up to less than 3 times. On the contrary, the computation time of iFedCrowd obviously increases with the number of clients. When the number of clients grew from 10 to 1,0000, iFedCrowd's compute time expands by more than 100 times. The larger the number of clients, the greater the advantage of TiFedCrowd over iFedCrowd in computing time. When the number of clients is 10, the computation time of TiFedCrowd is $2.5\%$ of iFedCrowd. However, when the number of clients grows to 10000, the computing time of TiFedCrowd is only $0.04\%$ of iFedCrowd, which saves a lot of time on the server-side. All these observation results from table~\ref{tab:t2} show that our TiFedCrowd has a huge advantage over iFedCrowd in terms of computation time for the reward rate ($r$). Coupled with the time control mechanism that stipulates the task completion deadline, TiFedCrowd makes the convergence time of the whole crowdsourcing project shorter.
+
 \section{Conclusion} \label{sec:con}
-Conclusion goes here...
+We applied the federated learning (FL) framework to crowdsourcing to achieve privacy protection for crowd workers. And we tailored an incentive mechanism TiFedCrowd for this federated crowdsourcing scenario to motivate more workers to complete crowdsourcing tasks with high quality and efficiency. TiFedCrowd models the process by which the server interacts with the client in federated crowdsourcing as a two-stage Stackelberg game to make the clients and the server in the competition maximize their utility concurrently. Meanwhile, we also define a time control mechanism in TiFedCrowd to limit the time for clients to complete federated crowdsourcing tasks. The time control mechanism not only initially screens out low-quality data/models but also allows the data requester to keep the data freshness and the maximum waiting time within his/her acceptable limits. We derived the Nash equilibrium of the Stackelberg game to obtain the optimal solution, which makes clients and server maximize their utility synchronously. Moreover, we proved that the solution is globally optimal. We also generalized TiFedCrowd to the multiple heterogeneous federated crowdsourcing scenario. Then we derived the Nash equilibrium for that scenario as well. Finally, a large number of experiments demonstrated that TiFedCrowd can safely complete crowdsourcing projects with high quality and the smallest possible budget within the deadline given by the data/models requester.
 
 \section*{Acknowledgments}
 This work was sponsored by the National Natural Science Foundation of China (No.62076130 and No. 61902186) and the Start-up Research Fund of Southeast University (No. RF1028623059).
+
 
 \bibliography{ref}
 \end{document}
